@@ -1,6 +1,8 @@
-﻿namespace AP.CityDataDemo.Domain;
+﻿namespace AP.CityDataDemo.Domain.Entities;
 
-public class Class1
+public class Country
 {
-
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public ICollection<City> Cities { get; set; } = new List<City>();
 }

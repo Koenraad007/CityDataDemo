@@ -1,0 +1,58 @@
+@page "/cities"
+@using AP.CityDataDemo.Application.DTOs
+@using AP.CityDataDemo.Application.Services
+@inject ICityService CityService
+
+<PageTitle>Steden</PageTitle>
+
+<h1>Steden Overzicht</h1>
+
+<div class="mb-3">
+    <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
+        Sorteer op Inwoners (Laag → Hoog)
+    </button>
+    <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
+        Sorteer op Inwoners (Hoog → Laag)
+    </button>
+</div>
+
+@if (cities == null)
+{
+    <p><em>Laden...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Stad</th>
+                <th>Land</th>
+                <th>Aantal Inwoners</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in cities)
+            {
+                <tr>
+                    <td>@city.Name</td>
+                    <td>@city.CountryName</td>
+                    <td>@city.Population.ToString("N0")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<CityDto>? cities;
+
+    protected override async Task OnInitializedAsync()
+    {
+        cities = await CityService.GetAllCitiesAsync();
+    }
+
+    private async Task SortByPopulation(bool descending)
+    {
+        cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
+    }
+}

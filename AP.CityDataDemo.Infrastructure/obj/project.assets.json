@@ -46,35 +46,36 @@
     ]
   },
   "packageFolders": {
-    "/Users/koenv/.nuget/packages/": {}
+    "/Users/samvanwouwe/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
+      "projectUniqueName": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
       "projectName": "AP.CityDataDemo.Infrastructure",
-      "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
-      "packagesPath": "/Users/koenv/.nuget/packages/",
-      "outputPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/obj/",
+      "projectPath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
+      "packagesPath": "/Users/samvanwouwe/.nuget/packages/",
+      "outputPath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Infrastructure/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/koenv/.nuget/NuGet/NuGet.Config"
+        "/Users/samvanwouwe/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj": {
-              "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj"
+            "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj": {
+              "projectPath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj"
             },
-            "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj": {
-              "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj"
+            "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj": {
+              "projectPath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj"
             }
           }
         }
@@ -88,7 +89,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "direct"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -104,12 +106,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.17, 8.0.17]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.17, 8.0.17]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

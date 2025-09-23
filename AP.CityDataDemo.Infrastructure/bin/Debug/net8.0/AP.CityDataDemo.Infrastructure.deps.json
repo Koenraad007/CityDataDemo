@@ -1,0 +1,56 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "AP.CityDataDemo.Infrastructure/1.0.0": {
+        "dependencies": {
+          "AP.CityDataDemo.Application": "1.0.0",
+          "AP.CityDataDemo.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AP.CityDataDemo.Infrastructure.dll": {}
+        }
+      },
+      "AP.CityDataDemo.Application/1.0.0": {
+        "dependencies": {
+          "AP.CityDataDemo.Domain": "1.0.0"
+        },
+        "runtime": {
+          "AP.CityDataDemo.Application.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "AP.CityDataDemo.Domain/1.0.0": {
+        "runtime": {
+          "AP.CityDataDemo.Domain.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AP.CityDataDemo.Infrastructure/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AP.CityDataDemo.Application/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AP.CityDataDemo.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

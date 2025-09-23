@@ -9,47 +9,45 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = AP.CityDataDemo.Presentation
 build_property.RootNamespace = AP.CityDataDemo.Presentation
-build_property.ProjectDir = /Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/
+build_property.ProjectDir = /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation
+build_property.MSBuildProjectDirectory = /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation
 build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/App.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/App.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3VudGVyLnJhem9y
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Cities.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9DaXRpZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Error.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Home.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWF0aGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Routes.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Routes.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9Sb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/_Imports.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9fSW1wb3J0cy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Layout/MainLayout.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Layout/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-7debilfsjf
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Layout/NavMenu.razor]
+[/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-ed5s8izs1v

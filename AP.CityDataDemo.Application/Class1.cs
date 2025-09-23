@@ -1,6 +1,7 @@
-﻿namespace AP.CityDataDemo.Application;
+﻿namespace AP.CityDataDemo.Application.DTOs;
 
-public class Class1
+public class CountryDto
 {
-
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
 }

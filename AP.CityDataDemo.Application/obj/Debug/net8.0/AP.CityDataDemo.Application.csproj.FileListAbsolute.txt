@@ -1,0 +1,16 @@
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/bin/Debug/net8.0/AP.CityDataDemo.Application.deps.json
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/bin/Debug/net8.0/AP.CityDataDemo.Application.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/bin/Debug/net8.0/AP.CityDataDemo.Application.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/bin/Debug/net8.0/AP.CityDataDemo.Domain.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/bin/Debug/net8.0/AP.CityDataDemo.Domain.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.csproj.AssemblyReference.cache
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.AssemblyInfoInputs.cache
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.AssemblyInfo.cs
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.csproj.CoreCompileInputs.cache
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.sourcelink.json
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityD.BD29EFA0.Up2Date
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/refint/AP.CityDataDemo.Application.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/AP.CityDataDemo.Application.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Application/obj/Debug/net8.0/ref/AP.CityDataDemo.Application.dll

@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "Rcr6jY8uuF0=",
+  "dgSpecHash": "1Nwk1B8ae3E=",
   "success": true,
-  "projectFilePath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
+  "expectedPackageFiles": [
+    "/Users/samvanwouwe/.nuget/packages/microsoft.netcore.app.ref/8.0.17/microsoft.netcore.app.ref.8.0.17.nupkg.sha512",
+    "/Users/samvanwouwe/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.17/microsoft.aspnetcore.app.ref.8.0.17.nupkg.sha512"
+  ],
   "logs": []
 }
