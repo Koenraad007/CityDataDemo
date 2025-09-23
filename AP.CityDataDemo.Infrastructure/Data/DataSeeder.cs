@@ -1,5 +1,5 @@
 using AP.CityDataDemo.Domain.Entities;
-using AP.CityDataDemo.Domain.Interfaces;
+using AP.CityDataDemo.Application.Interfaces;
 
 namespace AP.CityDataDemo.Infrastructure.Data;
 

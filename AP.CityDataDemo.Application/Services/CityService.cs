@@ -1,23 +1,25 @@
 using AP.CityDataDemo.Application.DTOs;
 using AP.CityDataDemo.Application.Mappings;
+using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Domain.Entities;
-using AP.CityDataDemo.Domain.Interfaces;
 
 namespace AP.CityDataDemo.Application.Services;
 
-public class CityService : GenericService<CityDto, City>, ICityService
+public class CityService : ICityService
 {
     private readonly ICityRepository _cityRepository;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public CityService(IUnitOfWork unitOfWork, ICityRepository cityRepository) 
-        : base(unitOfWork, cityRepository)
+    public CityService(ICityRepository cityRepository, IUnitOfWork unitOfWork)
     {
         _cityRepository = cityRepository;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<IEnumerable<CityDto>> GetAllCitiesAsync()
     {
-        return await GetAllAsync();
+        var cities = await _cityRepository.GetAllAsync();
+        return cities.Select(c => c.ToDto());
     }
 
     public async Task<IEnumerable<CityDto>> GetCitiesSortedByPopulationAsync(bool descending = false)
@@ -26,13 +28,32 @@ public class CityService : GenericService<CityDto, City>, ICityService
         return cities.Select(c => c.ToDto());
     }
 
-    protected override CityDto MapToDto(City entity)
+    public async Task<CityDto?> GetCityByIdAsync(int id)
     {
-        return entity.ToDto();
+        var city = await _cityRepository.GetCityByIdAsync(id);
+        return city?.ToDto();
     }
 
-    protected override City MapToEntity(CityDto dto)
+    public async Task<CityDto> CreateCityAsync(CityDto cityDto)
     {
-        return dto.ToEntity();
+        var city = cityDto.ToEntity();
+        await _cityRepository.AddCityAsync(city);
+        await _unitOfWork.SaveChangesAsync();
+        return city.ToDto();
+    }
+
+    public async Task<CityDto> UpdateCityAsync(int id, CityDto cityDto)
+    {
+        var city = cityDto.ToEntity();
+        city.Id = id;
+        await _cityRepository.UpdateCityAsync(city);
+        await _unitOfWork.SaveChangesAsync();
+        return city.ToDto();
+    }
+
+    public async Task DeleteCityAsync(int id)
+    {
+        await _cityRepository.DeleteCityByIdAsync(id);
+        await _unitOfWork.SaveChangesAsync();
     }
 }

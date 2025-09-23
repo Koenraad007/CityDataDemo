@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Domain.Interfaces;
+using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Repositories;
 using AP.CityDataDemo.Infrastructure.Data;
 

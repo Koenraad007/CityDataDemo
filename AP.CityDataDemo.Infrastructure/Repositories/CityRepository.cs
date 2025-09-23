@@ -1,5 +1,5 @@
 using AP.CityDataDemo.Domain.Entities;
-using AP.CityDataDemo.Domain.Interfaces;
+using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Data;
 
 namespace AP.CityDataDemo.Infrastructure.Repositories;
@@ -43,5 +43,20 @@ public class CityRepository : GenericRepository<City>, ICityRepository
     public Task AddCitiesAsync(IEnumerable<City> cities)
     {
         return AddRangeAsync(cities);
+    }
+
+    public Task UpdateCityAsync(City city)
+    {
+        return UpdateAsync(city);
+    }
+
+    public Task DeleteCityAsync(City city)
+    {
+        return DeleteAsync(city);
+    }
+
+    public Task DeleteCityByIdAsync(int id)
+    {
+        return DeleteByIdAsync(id);
     }
 }

@@ -1,4 +1,4 @@
-namespace AP.CityDataDemo.Domain.Interfaces;
+namespace AP.CityDataDemo.Application.Interfaces;
 
 public interface IDataSeeder
 {

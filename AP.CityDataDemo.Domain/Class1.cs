@@ -1,8 +1,6 @@
-﻿using AP.CityDataDemo.Domain.Interfaces;
+﻿namespace AP.CityDataDemo.Domain.Entities;
 
-namespace AP.CityDataDemo.Domain.Entities;
-
-public class Country : IBaseEntity
+public class Country
 {
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;

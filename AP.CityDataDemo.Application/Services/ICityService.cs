@@ -1,10 +1,13 @@
 using AP.CityDataDemo.Application.DTOs;
-using AP.CityDataDemo.Domain.Entities;
 
 namespace AP.CityDataDemo.Application.Services;
 
-public interface ICityService : IGenericService<CityDto, City>
+public interface ICityService
 {
     Task<IEnumerable<CityDto>> GetAllCitiesAsync();
     Task<IEnumerable<CityDto>> GetCitiesSortedByPopulationAsync(bool descending = false);
+    Task<CityDto?> GetCityByIdAsync(int id);
+    Task<CityDto> CreateCityAsync(CityDto cityDto);
+    Task<CityDto> UpdateCityAsync(int id, CityDto cityDto);
+    Task DeleteCityAsync(int id);
 }

@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
-using AP.CityDataDemo.Domain.Interfaces;
+using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Data;
 
 namespace AP.CityDataDemo.Infrastructure.Repositories;
 
-public class GenericRepository<T> : IGenericRepository<T> where T : class, IBaseEntity
+public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
     protected readonly IInMemoryDataStore _dataStore;
     protected readonly List<T> _collection;
@@ -35,7 +35,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
 
     public virtual Task<T?> GetByIdAsync(int id)
     {
-        var entity = _collection.FirstOrDefault(e => e.Id == id);
+        // Since we removed IBaseEntity, we need to use reflection to find Id property
+        var entity = _collection.FirstOrDefault(e => 
+        {
+            var idProperty = e.GetType().GetProperty("Id");
+            return idProperty != null && (int)idProperty.GetValue(e)! == id;
+        });
         return Task.FromResult(entity);
     }
 
@@ -59,7 +64,16 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
 
     public virtual Task UpdateAsync(T entity)
     {
-        var existingEntity = _collection.FirstOrDefault(e => e.Id == entity.Id);
+        var idProperty = entity.GetType().GetProperty("Id");
+        if (idProperty == null) return Task.CompletedTask;
+        
+        var entityId = (int)idProperty.GetValue(entity)!;
+        var existingEntity = _collection.FirstOrDefault(e => 
+        {
+            var existingIdProperty = e.GetType().GetProperty("Id");
+            return existingIdProperty != null && (int)existingIdProperty.GetValue(e)! == entityId;
+        });
+        
         if (existingEntity != null)
         {
             var index = _collection.IndexOf(existingEntity);
@@ -76,7 +90,12 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IBase
 
     public virtual Task DeleteByIdAsync(int id)
     {
-        var entity = _collection.FirstOrDefault(e => e.Id == id);
+        var entity = _collection.FirstOrDefault(e => 
+        {
+            var idProperty = e.GetType().GetProperty("Id");
+            return idProperty != null && (int)idProperty.GetValue(e)! == id;
+        });
+        
         if (entity != null)
         {
             _collection.Remove(entity);
