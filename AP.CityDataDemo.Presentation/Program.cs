@@ -22,6 +22,9 @@ builder.Services.AddScoped<ICityService, CityService>();
 // Add Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Add generic repositories
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
 // Add repositories
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();

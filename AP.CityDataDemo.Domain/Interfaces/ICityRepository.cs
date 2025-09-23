@@ -2,7 +2,7 @@ using AP.CityDataDemo.Domain.Entities;
 
 namespace AP.CityDataDemo.Domain.Interfaces;
 
-public interface ICityRepository
+public interface ICityRepository : IGenericRepository<City>
 {
     Task<IEnumerable<City>> GetAllCitiesAsync();
     Task<City?> GetCityByIdAsync(int id);

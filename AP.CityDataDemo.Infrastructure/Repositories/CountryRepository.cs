@@ -4,35 +4,29 @@ using AP.CityDataDemo.Infrastructure.Data;
 
 namespace AP.CityDataDemo.Infrastructure.Repositories;
 
-public class CountryRepository : ICountryRepository
+public class CountryRepository : GenericRepository<Country>, ICountryRepository
 {
-    private readonly IInMemoryDataStore _dataStore;
-
-    public CountryRepository(IInMemoryDataStore dataStore)
+    public CountryRepository(IInMemoryDataStore dataStore) : base(dataStore)
     {
-        _dataStore = dataStore;
     }
 
     public Task<IEnumerable<Country>> GetAllCountriesAsync()
     {
-        return Task.FromResult<IEnumerable<Country>>(_dataStore.Countries);
+        return GetAllAsync();
     }
 
     public Task<Country?> GetCountryByIdAsync(int id)
     {
-        var country = _dataStore.Countries.FirstOrDefault(c => c.Id == id);
-        return Task.FromResult(country);
+        return GetByIdAsync(id);
     }
 
     public Task AddCountryAsync(Country country)
     {
-        _dataStore.Countries.Add(country);
-        return Task.CompletedTask;
+        return AddAsync(country);
     }
 
     public Task AddCountriesAsync(IEnumerable<Country> countries)
     {
-        _dataStore.Countries.AddRange(countries);
-        return Task.CompletedTask;
+        return AddRangeAsync(countries);
     }
 }
