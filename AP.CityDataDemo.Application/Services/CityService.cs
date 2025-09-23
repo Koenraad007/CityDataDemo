@@ -1,4 +1,5 @@
 using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Application.Mappings;
 using AP.CityDataDemo.Domain.Entities;
 using AP.CityDataDemo.Domain.Interfaces;
 
@@ -21,30 +22,17 @@ public class CityService : GenericService<CityDto, City>, ICityService
 
     public async Task<IEnumerable<CityDto>> GetCitiesSortedByPopulationAsync(bool descending = false)
     {
-        var cities = await GetAllCitiesAsync();
-        return descending 
-            ? cities.OrderByDescending(c => c.Population)
-            : cities.OrderBy(c => c.Population);
+        var cities = await _cityRepository.GetAllAsync(sortByName: false, descending);
+        return cities.Select(c => c.ToDto());
     }
 
     protected override CityDto MapToDto(City entity)
     {
-        return new CityDto
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            Population = entity.Population,
-            CountryName = entity.Country.Name
-        };
+        return entity.ToDto();
     }
 
     protected override City MapToEntity(CityDto dto)
     {
-        return new City
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            Population = dto.Population
-        };
+        return dto.ToEntity();
     }
 }

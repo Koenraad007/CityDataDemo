@@ -16,7 +16,11 @@
     </button>
 </div>
 
-@if (cities == null)
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (cities == null)
 {
     <p><em>Laden...</em></p>
 }
@@ -45,14 +49,30 @@ else
 
 @code {
     private IEnumerable<CityDto>? cities;
+    private string? errorMessage;
 
     protected override async Task OnInitializedAsync()
     {
-        cities = await CityService.GetAllCitiesAsync();
+        try
+        {
+            cities = await CityService.GetAllCitiesAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
+        }
     }
 
     private async Task SortByPopulation(bool descending)
     {
-        cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
+        try
+        {
+            cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
+            errorMessage = null;
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Sorry, we could not sort the city data at this time.";
+        }
     }
 }

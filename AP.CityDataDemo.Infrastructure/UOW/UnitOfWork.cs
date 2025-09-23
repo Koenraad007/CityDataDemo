@@ -12,12 +12,7 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(IInMemoryDataStore dataStore)
     {
         _dataStore = dataStore;
-        Cities = new CityRepository(_dataStore);
-        Countries = new CountryRepository(_dataStore);
     }
-
-    public ICityRepository Cities { get; }
-    public ICountryRepository Countries { get; }
 
     public Task<int> SaveChangesAsync()
     {

@@ -10,9 +10,24 @@ public class CityRepository : GenericRepository<City>, ICityRepository
     {
     }
 
-    public Task<IEnumerable<City>> GetAllCitiesAsync()
+    public Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
     {
-        return GetAllAsync();
+        var cities = _collection.AsEnumerable();
+        
+        if (sortByName)
+        {
+            cities = descending 
+                ? cities.OrderByDescending(c => c.Name)
+                : cities.OrderBy(c => c.Name);
+        }
+        else
+        {
+            cities = descending 
+                ? cities.OrderByDescending(c => c.Population)
+                : cities.OrderBy(c => c.Population);
+        }
+        
+        return Task.FromResult(cities);
     }
 
     public Task<City?> GetCityByIdAsync(int id)
