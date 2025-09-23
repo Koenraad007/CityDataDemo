@@ -2,6 +2,7 @@
 @using AP.CityDataDemo.Application.DTOs
 @using AP.CityDataDemo.Application.Services
 @inject ICityService CityService
+@rendermode InteractiveServer
 
 <PageTitle>Steden</PageTitle>
 
@@ -56,10 +57,12 @@ else
         try
         {
             cities = await CityService.GetAllCitiesAsync();
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             errorMessage = "Sorry, we could not load the city data at this time.";
+            StateHasChanged();
         }
     }
 
@@ -69,10 +72,12 @@ else
         {
             cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
             errorMessage = null;
+            StateHasChanged();
         }
         catch (Exception ex)
         {
             errorMessage = "Sorry, we could not sort the city data at this time.";
+            StateHasChanged();
         }
     }
 }
