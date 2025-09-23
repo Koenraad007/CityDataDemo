@@ -1,0 +1,138 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "AP.CityDataDemo.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "AP.CityDataDemo.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/AP.CityDataDemo.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AP.CityDataDemo.Application.dll": {}
+        }
+      },
+      "AP.CityDataDemo.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/AP.CityDataDemo.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AP.CityDataDemo.Domain.dll": {}
+        }
+      },
+      "AP.CityDataDemo.Infrastructure/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "dependencies": {
+          "AP.CityDataDemo.Application": "1.0.0",
+          "AP.CityDataDemo.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/AP.CityDataDemo.Infrastructure.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/AP.CityDataDemo.Infrastructure.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AP.CityDataDemo.Application/1.0.0": {
+      "type": "project",
+      "path": "../AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj",
+      "msbuildProject": "../AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj"
+    },
+    "AP.CityDataDemo.Domain/1.0.0": {
+      "type": "project",
+      "path": "../AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj",
+      "msbuildProject": "../AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj"
+    },
+    "AP.CityDataDemo.Infrastructure/1.0.0": {
+      "type": "project",
+      "path": "../AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
+      "msbuildProject": "../AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "AP.CityDataDemo.Application >= 1.0.0",
+      "AP.CityDataDemo.Infrastructure >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "/Users/koenv/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/AP.CityDataDemo.Presentation.csproj",
+      "projectName": "AP.CityDataDemo.Presentation",
+      "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/AP.CityDataDemo.Presentation.csproj",
+      "packagesPath": "/Users/koenv/.nuget/packages/",
+      "outputPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/Users/koenv/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {
+            "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj": {
+              "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj"
+            },
+            "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj": {
+              "projectPath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.AspNetCore.App": {
+            "privateAssets": "none"
+          },
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
