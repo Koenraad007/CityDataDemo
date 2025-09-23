@@ -5,25 +5,25 @@ namespace AP.CityDataDemo.Infrastructure.Data;
 
 public class DataSeeder : IDataSeeder
 {
-    private readonly IInMemoryDataStore _dataStore;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public DataSeeder(IInMemoryDataStore dataStore)
+    public DataSeeder(IUnitOfWork unitOfWork)
     {
-        _dataStore = dataStore;
+        _unitOfWork = unitOfWork;
     }
 
-    public Task SeedAsync()
+    public async Task SeedAsync()
     {
-        if (_dataStore.Countries.Any())
-            return Task.CompletedTask;
+        var existingCountries = await _unitOfWork.Countries.GetAllCountriesAsync();
+        if (existingCountries.Any())
+            return;
 
-        SeedCountries();
-        SeedCities();
-
-        return Task.CompletedTask;
+        await SeedCountriesAsync();
+        await SeedCitiesAsync();
+        await _unitOfWork.SaveChangesAsync();
     }
 
-    private void SeedCountries()
+    private async Task SeedCountriesAsync()
     {
         var countries = new List<Country>
         {
@@ -33,31 +33,31 @@ public class DataSeeder : IDataSeeder
             new() { Id = 4, Name = "Frankrijk" }
         };
 
-        _dataStore.Countries.AddRange(countries);
+        await _unitOfWork.Countries.AddCountriesAsync(countries);
     }
 
-    private void SeedCities()
+    private async Task SeedCitiesAsync()
     {
-        var netherlands = _dataStore.Countries.First(c => c.Id == 1);
-        var belgium = _dataStore.Countries.First(c => c.Id == 2);
-        var germany = _dataStore.Countries.First(c => c.Id == 3);
-        var france = _dataStore.Countries.First(c => c.Id == 4);
+        var netherlands = await _unitOfWork.Countries.GetCountryByIdAsync(1);
+        var belgium = await _unitOfWork.Countries.GetCountryByIdAsync(2);
+        var germany = await _unitOfWork.Countries.GetCountryByIdAsync(3);
+        var france = await _unitOfWork.Countries.GetCountryByIdAsync(4);
 
         var cities = new List<City>
         {
-            new() { Id = 1, Name = "Amsterdam", Population = 872757, CountryId = 1, Country = netherlands },
-            new() { Id = 2, Name = "Rotterdam", Population = 651446, CountryId = 1, Country = netherlands },
-            new() { Id = 3, Name = "Den Haag", Population = 548320, CountryId = 1, Country = netherlands },
-            new() { Id = 4, Name = "Utrecht", Population = 361966, CountryId = 1, Country = netherlands },
-            new() { Id = 5, Name = "Antwerpen", Population = 530504, CountryId = 2, Country = belgium },
-            new() { Id = 6, Name = "Brussel", Population = 1208542, CountryId = 2, Country = belgium },
-            new() { Id = 7, Name = "Gent", Population = 263614, CountryId = 2, Country = belgium },
-            new() { Id = 8, Name = "Berlijn", Population = 3669491, CountryId = 3, Country = germany },
-            new() { Id = 9, Name = "München", Population = 1488202, CountryId = 3, Country = germany },
-            new() { Id = 10, Name = "Parijs", Population = 2161000, CountryId = 4, Country = france },
-            new() { Id = 11, Name = "Lyon", Population = 518635, CountryId = 4, Country = france }
+            new() { Id = 1, Name = "Amsterdam", Population = 872757, CountryId = 1, Country = netherlands! },
+            new() { Id = 2, Name = "Rotterdam", Population = 651446, CountryId = 1, Country = netherlands! },
+            new() { Id = 3, Name = "Den Haag", Population = 548320, CountryId = 1, Country = netherlands! },
+            new() { Id = 4, Name = "Utrecht", Population = 361966, CountryId = 1, Country = netherlands! },
+            new() { Id = 5, Name = "Antwerpen", Population = 530504, CountryId = 2, Country = belgium! },
+            new() { Id = 6, Name = "Brussel", Population = 1208542, CountryId = 2, Country = belgium! },
+            new() { Id = 7, Name = "Gent", Population = 263614, CountryId = 2, Country = belgium! },
+            new() { Id = 8, Name = "Berlijn", Population = 3669491, CountryId = 3, Country = germany! },
+            new() { Id = 9, Name = "München", Population = 1488202, CountryId = 3, Country = germany! },
+            new() { Id = 10, Name = "Parijs", Population = 2161000, CountryId = 4, Country = france! },
+            new() { Id = 11, Name = "Lyon", Population = 518635, CountryId = 4, Country = france! }
         };
 
-        _dataStore.Cities.AddRange(cities);
+        await _unitOfWork.Cities.AddCitiesAsync(cities);
     }
 }

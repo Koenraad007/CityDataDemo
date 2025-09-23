@@ -3,6 +3,7 @@ using AP.CityDataDemo.Application.Services;
 using AP.CityDataDemo.Domain.Interfaces;
 using AP.CityDataDemo.Infrastructure.Repositories;
 using AP.CityDataDemo.Infrastructure.Data;
+using AP.CityDataDemo.Infrastructure.UOW;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 
 // Add application services
 builder.Services.AddScoped<ICityService, CityService>();
+
+// Add Unit of Work
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Add repositories
 builder.Services.AddScoped<ICityRepository, CityRepository>();

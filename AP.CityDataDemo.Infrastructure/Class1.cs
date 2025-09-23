@@ -23,4 +23,16 @@ public class CityRepository : ICityRepository
         var city = _dataStore.Cities.FirstOrDefault(c => c.Id == id);
         return Task.FromResult(city);
     }
+
+    public Task AddCityAsync(City city)
+    {
+        _dataStore.Cities.Add(city);
+        return Task.CompletedTask;
+    }
+
+    public Task AddCitiesAsync(IEnumerable<City> cities)
+    {
+        _dataStore.Cities.AddRange(cities);
+        return Task.CompletedTask;
+    }
 }

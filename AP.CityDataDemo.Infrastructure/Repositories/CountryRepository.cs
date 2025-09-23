@@ -23,4 +23,16 @@ public class CountryRepository : ICountryRepository
         var country = _dataStore.Countries.FirstOrDefault(c => c.Id == id);
         return Task.FromResult(country);
     }
+
+    public Task AddCountryAsync(Country country)
+    {
+        _dataStore.Countries.Add(country);
+        return Task.CompletedTask;
+    }
+
+    public Task AddCountriesAsync(IEnumerable<Country> countries)
+    {
+        _dataStore.Countries.AddRange(countries);
+        return Task.CompletedTask;
+    }
 }
