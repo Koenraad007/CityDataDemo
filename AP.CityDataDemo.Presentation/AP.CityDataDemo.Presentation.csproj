@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="../AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj" />
     <ProjectReference Include="../AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj" />
   </ItemGroup>

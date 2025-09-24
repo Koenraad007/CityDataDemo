@@ -1,0 +1,12 @@
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/bin/Debug/net8.0/AP.CityDataDemo.Domain.deps.json
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/bin/Debug/net8.0/AP.CityDataDemo.Domain.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/bin/Debug/net8.0/AP.CityDataDemo.Domain.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.AssemblyInfoInputs.cache
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.AssemblyInfo.cs
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.csproj.CoreCompileInputs.cache
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.sourcelink.json
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/refint/AP.CityDataDemo.Domain.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/AP.CityDataDemo.Domain.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Domain/obj/Debug/net8.0/ref/AP.CityDataDemo.Domain.dll

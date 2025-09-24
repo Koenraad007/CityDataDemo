@@ -1,0 +1,132 @@
+@page "/cities"
+@using AP.CityDataDemo.Application.DTOs
+@using AP.CityDataDemo.Application.CQRS.Queries.Cities
+@using AP.CityDataDemo.Application.Exceptions
+@using FluentValidation
+@using MediatR
+@inject IMediator Mediator
+@rendermode InteractiveServer
+
+<PageTitle>Cities</PageTitle>
+
+<h1>Cities Overview</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
+                Sort by Population (Low → High)
+            </button>
+            <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
+                Sort by Population (High → Low)
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-success" @onclick="ToggleAddForm">
+            @if (showAddForm)
+            {
+                <span>➖ Hide Form</span>
+            }
+            else
+            {
+                <span>➕ Add City</span>
+            }
+        </button>
+    </div>
+</div>
+
+@if (showAddForm)
+{
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <AddCityForm OnCityAdded="OnCityAdded" />
+        </div>
+    </div>
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (cities == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>City</th>
+                <th>Country</th>
+                <th>Population</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in cities)
+            {
+                <tr>
+                    <td>@city.Name</td>
+                    <td>@city.CountryName</td>
+                    <td>@city.Population.ToString("N0")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<CityDto>? cities;
+    private string? errorMessage;
+    private bool showAddForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cities = await Mediator.Send(new GetAllCitiesQuery());
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
+        }
+    }
+
+    private async Task SortByPopulation(bool descending)
+    {
+        try
+        {
+            cities = await Mediator.Send(new GetCitiesSortedByPopulationQuery(descending));
+            errorMessage = null;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not sort the city data at this time.";
+        }
+    }
+
+    private void ToggleAddForm()
+    {
+        showAddForm = !showAddForm;
+    }
+
+    private async Task OnCityAdded()
+    {
+        showAddForm = false;
+        await LoadCities();
+    }
+
+    private async Task LoadCities()
+    {
+        try
+        {
+            cities = await Mediator.Send(new GetAllCitiesQuery());
+            errorMessage = null;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
+        }
+    }
+}
