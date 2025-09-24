@@ -8,6 +8,8 @@ public interface ICityService
     Task<IEnumerable<CityDto>> GetCitiesSortedByPopulationAsync(bool descending = false);
     Task<CityDto?> GetCityByIdAsync(int id);
     Task<CityDto> CreateCityAsync(CityDto cityDto);
+    Task<CityDto> CreateCityAsync(AddCityDto addCityDto);
     Task<CityDto> UpdateCityAsync(int id, CityDto cityDto);
     Task DeleteCityAsync(int id);
+    Task<IEnumerable<CountryDto>> GetAllCountriesAsync();
 }

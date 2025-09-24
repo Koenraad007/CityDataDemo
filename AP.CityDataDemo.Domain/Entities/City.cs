@@ -1,6 +1,8 @@
+using AP.CityDataDemo.Domain.Common;
+
 namespace AP.CityDataDemo.Domain.Entities;
 
-public class City
+public class City : IEntity
 {
     public int Id { get; set; }
     public string Name { get; private set; }

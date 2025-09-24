@@ -31,37 +31,44 @@ public class DataSeeder : IDataSeeder
     {
         var countries = new List<Country>
         {
-            new() { Id = 1, Name = "Nederland" },
-            new() { Id = 2, Name = "België" },
-            new() { Id = 3, Name = "Duitsland" },
-            new() { Id = 4, Name = "Frankrijk" }
+            new() { Name = "Nederland" },
+            new() { Name = "België" },
+            new() { Name = "Duitsland" },
+            new() { Name = "Frankrijk" }
         };
 
-        await _countryRepository.AddCountriesAsync(countries);
+        foreach (var country in countries)
+        {
+            await _countryRepository.AddCountryAsync(country);
+        }
     }
 
     private async Task SeedCitiesAsync()
     {
-        var netherlands = await _countryRepository.GetCountryByIdAsync(1);
-        var belgium = await _countryRepository.GetCountryByIdAsync(2);
-        var germany = await _countryRepository.GetCountryByIdAsync(3);
-        var france = await _countryRepository.GetCountryByIdAsync(4);
+        var countries = await _countryRepository.GetAllCountriesAsync();
+        var netherlands = countries.First(c => c.Name == "Nederland");
+        var belgium = countries.First(c => c.Name == "België");
+        var germany = countries.First(c => c.Name == "Duitsland");
+        var france = countries.First(c => c.Name == "Frankrijk");
 
         var cities = new List<City>
         {
-            new("Amsterdam", 872757, 1),
-            new("Rotterdam", 651446, 1),
-            new("Den Haag", 548320, 1),
-            new("Utrecht", 361966, 1),
-            new("Antwerpen", 530504, 2),
-            new("Brussel", 1208542, 2),
-            new("Gent", 263614, 2),
-            new("Berlijn", 3669491, 3),
-            new("München", 1488202, 3),
-            new("Parijs", 2161000, 4),
-            new("Lyon", 518635, 4)
+            new("Amsterdam", 872757, netherlands.Id),
+            new("Rotterdam", 651446, netherlands.Id),
+            new("Den Haag", 548320, netherlands.Id),
+            new("Utrecht", 361966, netherlands.Id),
+            new("Antwerpen", 530504, belgium.Id),
+            new("Brussel", 1208542, belgium.Id),
+            new("Gent", 263614, belgium.Id),
+            new("Berlijn", 3669491, germany.Id),
+            new("München", 1488202, germany.Id),
+            new("Parijs", 2161000, france.Id),
+            new("Lyon", 518635, france.Id)
         };
 
-        await _cityRepository.AddCitiesAsync(cities);
+        foreach (var city in cities)
+        {
+            await _cityRepository.AddCityAsync(city);
+        }
     }
 }

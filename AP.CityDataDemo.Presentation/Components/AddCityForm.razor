@@ -1,0 +1,137 @@
+@using AP.CityDataDemo.Application.DTOs
+@using AP.CityDataDemo.Application.Services
+@using AP.CityDataDemo.Application.Exceptions
+@using System.ComponentModel.DataAnnotations
+@using FluentValidation
+@inject ICityService CityService
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Nieuwe Stad Toevoegen</h5>
+    </div>
+    <div class="card-body">
+        <EditForm Model="@addCityDto" OnValidSubmit="@HandleValidSubmit" FormName="AddCityForm">
+            <DataAnnotationsValidator />
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger">@errorMessage</div>
+            }
+            
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success">@successMessage</div>
+            }
+
+            <div class="mb-3">
+                <label for="cityName" class="form-label">Stad Naam</label>
+                <InputText id="cityName" class="form-control" @bind-Value="addCityDto.Name" />
+                <ValidationMessage For="@(() => addCityDto.Name)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="population" class="form-label">Aantal Inwoners</label>
+                <InputNumber id="population" class="form-control" @bind-Value="addCityDto.Population" />
+                <ValidationMessage For="@(() => addCityDto.Population)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="country" class="form-label">Land</label>
+                <InputSelect id="country" class="form-select" @bind-Value="addCityDto.CountryId">
+                    <option value="0">-- Selecteer een land --</option>
+                    @if (countries != null)
+                    {
+                        @foreach (var country in countries)
+                        {
+                            <option value="@country.Id">@country.Name</option>
+                        }
+                    }
+                </InputSelect>
+                <ValidationMessage For="@(() => addCityDto.CountryId)" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Bezig met opslaan...</span>
+                    }
+                    else
+                    {
+                        <span>Stad Toevoegen</span>
+                    }
+                </button>
+                <button type="button" class="btn btn-secondary" @onclick="ResetForm">Reset</button>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback OnCityAdded { get; set; }
+    
+    private AddCityDto addCityDto = new();
+    private IEnumerable<CountryDto>? countries;
+    private string? errorMessage;
+    private string? successMessage;
+    private bool isSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            countries = await CityService.GetAllCountriesAsync();
+        }
+        catch (Exception)
+        {
+            errorMessage = "Kon landen niet laden. Probeer het later opnieuw.";
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        try
+        {
+            isSubmitting = true;
+            errorMessage = null;
+            successMessage = null;
+
+            var result = await CityService.CreateCityAsync(addCityDto);
+            
+            successMessage = $"Stad '{result.Name}' is succesvol toegevoegd!";
+            ResetForm();
+            
+            await OnCityAdded.InvokeAsync();
+        }
+        catch (FluentValidation.ValidationException ex)
+        {
+            // Toon de eerste validatiefout van FluentValidation
+            errorMessage = ex.Errors?.FirstOrDefault()?.ErrorMessage ?? ex.Message;
+        }
+        catch (ArgumentException ex)
+        {
+            // Domain guards (bijv. uit City constructor)
+            errorMessage = ex.Message;
+        }
+        catch (NotFoundException ex)
+        {
+            errorMessage = ex.Message;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Er is een fout opgetreden bij het toevoegen van de stad. Probeer het later opnieuw.";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void ResetForm()
+    {
+        addCityDto = new AddCityDto();
+        errorMessage = null;
+        successMessage = null;
+    }
+}

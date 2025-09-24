@@ -1,6 +1,8 @@
 @page "/cities"
 @using AP.CityDataDemo.Application.DTOs
 @using AP.CityDataDemo.Application.Services
+@using AP.CityDataDemo.Application.Exceptions
+@using FluentValidation
 @inject ICityService CityService
 @rendermode InteractiveServer
 
@@ -8,14 +10,39 @@
 
 <h1>Steden Overzicht</h1>
 
-<div class="mb-3">
-    <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
-        Sorteer op Inwoners (Laag → Hoog)
-    </button>
-    <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
-        Sorteer op Inwoners (Hoog → Laag)
-    </button>
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
+                Sorteer op Inwoners (Laag → Hoog)
+            </button>
+            <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
+                Sorteer op Inwoners (Hoog → Laag)
+            </button>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <button class="btn btn-success" @onclick="ToggleAddForm">
+            @if (showAddForm)
+            {
+                <span>➖ Verberg Formulier</span>
+            }
+            else
+            {
+                <span>➕ Stad Toevoegen</span>
+            }
+        </button>
+    </div>
 </div>
+
+@if (showAddForm)
+{
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <AddCityForm OnCityAdded="OnCityAdded" />
+        </div>
+    </div>
+}
 
 @if (errorMessage != null)
 {
@@ -51,18 +78,17 @@ else
 @code {
     private IEnumerable<CityDto>? cities;
     private string? errorMessage;
+    private bool showAddForm = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             cities = await CityService.GetAllCitiesAsync();
-            StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "Sorry, we could not load the city data at this time.";
-            StateHasChanged();
         }
     }
 
@@ -72,12 +98,34 @@ else
         {
             cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
             errorMessage = null;
-            StateHasChanged();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "Sorry, we could not sort the city data at this time.";
-            StateHasChanged();
+        }
+    }
+
+    private void ToggleAddForm()
+    {
+        showAddForm = !showAddForm;
+    }
+
+    private async Task OnCityAdded()
+    {
+        showAddForm = false;
+        await LoadCities();
+    }
+
+    private async Task LoadCities()
+    {
+        try
+        {
+            cities = await CityService.GetAllCitiesAsync();
+            errorMessage = null;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
         }
     }
 }

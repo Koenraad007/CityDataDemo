@@ -6,8 +6,11 @@ namespace AP.CityDataDemo.Infrastructure.Repositories;
 
 public class CityRepository : GenericRepository<City>, ICityRepository
 {
+    private new readonly IInMemoryDataStore _dataStore;
+    
     public CityRepository(IInMemoryDataStore dataStore) : base(dataStore)
     {
+        _dataStore = dataStore;
     }
 
     public Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
@@ -37,15 +40,22 @@ public class CityRepository : GenericRepository<City>, ICityRepository
 
     public Task AddCityAsync(City city)
     {
+        if (city.Id == 0)
+        {
+            city.Id = _dataStore.GetNextCityId();
+        }
         return AddAsync(city);
     }
 
-    public Task AddCitiesAsync(IEnumerable<City> cities)
+    public async Task AddCitiesAsync(IEnumerable<City> cities)
     {
-        return AddRangeAsync(cities);
+        foreach (var city in cities)
+        {
+            await AddCityAsync(city);
+        }
     }
 
-    public Task UpdateCityAsync(City city)
+    public Task<bool> UpdateCityAsync(City city)
     {
         return UpdateAsync(city);
     }
@@ -55,8 +65,14 @@ public class CityRepository : GenericRepository<City>, ICityRepository
         return DeleteAsync(city);
     }
 
-    public Task DeleteCityByIdAsync(int id)
+    public Task<bool> DeleteCityByIdAsync(int id)
     {
         return DeleteByIdAsync(id);
+    }
+
+    public Task<bool> CityNameExistsAsync(string name)
+    {
+        var exists = _collection.Any(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult(exists);
     }
 }

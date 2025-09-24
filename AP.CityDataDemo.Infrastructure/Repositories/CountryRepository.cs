@@ -6,8 +6,11 @@ namespace AP.CityDataDemo.Infrastructure.Repositories;
 
 public class CountryRepository : GenericRepository<Country>, ICountryRepository
 {
+    private new readonly IInMemoryDataStore _dataStore;
+    
     public CountryRepository(IInMemoryDataStore dataStore) : base(dataStore)
     {
+        _dataStore = dataStore;
     }
 
     public Task<IEnumerable<Country>> GetAllCountriesAsync()
@@ -22,15 +25,22 @@ public class CountryRepository : GenericRepository<Country>, ICountryRepository
 
     public Task AddCountryAsync(Country country)
     {
+        if (country.Id == 0)
+        {
+            country.Id = _dataStore.GetNextCountryId();
+        }
         return AddAsync(country);
     }
 
-    public Task AddCountriesAsync(IEnumerable<Country> countries)
+    public async Task AddCountriesAsync(IEnumerable<Country> countries)
     {
-        return AddRangeAsync(countries);
+        foreach (var country in countries)
+        {
+            await AddCountryAsync(country);
+        }
     }
 
-    public Task UpdateCountryAsync(Country country)
+    public Task<bool> UpdateCountryAsync(Country country)
     {
         return UpdateAsync(country);
     }
@@ -40,7 +50,7 @@ public class CountryRepository : GenericRepository<Country>, ICountryRepository
         return DeleteAsync(country);
     }
 
-    public Task DeleteCountryByIdAsync(int id)
+    public Task<bool> DeleteCountryByIdAsync(int id)
     {
         return DeleteByIdAsync(id);
     }

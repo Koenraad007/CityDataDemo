@@ -1,9 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "v7k3J2hUw+o=",
+  "dgSpecHash": "uIgr6YVkywQ=",
   "success": true,
   "projectFilePath": "/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/AP.CityDataDemo.Presentation.csproj",
   "expectedPackageFiles": [
+    "/Users/samvanwouwe/.nuget/packages/fluentvalidation/11.9.0/fluentvalidation.11.9.0.nupkg.sha512",
+    "/Users/samvanwouwe/.nuget/packages/fluentvalidation.dependencyinjectionextensions/11.9.0/fluentvalidation.dependencyinjectionextensions.11.9.0.nupkg.sha512",
+    "/Users/samvanwouwe/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/2.1.0/microsoft.extensions.dependencyinjection.abstractions.2.1.0.nupkg.sha512",
     "/Users/samvanwouwe/.nuget/packages/microsoft.netcore.app.ref/8.0.17/microsoft.netcore.app.ref.8.0.17.nupkg.sha512",
     "/Users/samvanwouwe/.nuget/packages/microsoft.aspnetcore.app.ref/8.0.17/microsoft.aspnetcore.app.ref.8.0.17.nupkg.sha512",
     "/Users/samvanwouwe/.nuget/packages/microsoft.netcore.app.host.osx-arm64/8.0.17/microsoft.netcore.app.host.osx-arm64.8.0.17.nupkg.sha512"

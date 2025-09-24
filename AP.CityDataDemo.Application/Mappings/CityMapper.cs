@@ -12,12 +12,13 @@ public static class CityMapper
             Id = entity.Id,
             Name = entity.Name,
             Population = entity.Population,
+            CountryId = entity.CountryId,
             CountryName = entity.Country?.Name ?? "N/A"
         };
     }
 
     public static City ToEntity(this CityDto dto)
     {
-        return new City(dto.Name, dto.Population, 1);
+        return new City(dto.Name, dto.Population, dto.CountryId);
     }
 }

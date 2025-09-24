@@ -8,7 +8,8 @@ public interface ICityRepository : IGenericRepository<City>
     Task<City?> GetCityByIdAsync(int id);
     Task AddCityAsync(City city);
     Task AddCitiesAsync(IEnumerable<City> cities);
-    Task UpdateCityAsync(City city);
+    Task<bool> UpdateCityAsync(City city);
     Task DeleteCityAsync(City city);
-    Task DeleteCityByIdAsync(int id);
+    Task<bool> DeleteCityByIdAsync(int id);
+    Task<bool> CityNameExistsAsync(string name);
 }

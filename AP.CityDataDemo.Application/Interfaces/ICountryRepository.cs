@@ -8,7 +8,7 @@ public interface ICountryRepository : IGenericRepository<Country>
     Task<Country?> GetCountryByIdAsync(int id);
     Task AddCountryAsync(Country country);
     Task AddCountriesAsync(IEnumerable<Country> countries);
-    Task UpdateCountryAsync(Country country);
+    Task<bool> UpdateCountryAsync(Country country);
     Task DeleteCountryAsync(Country country);
-    Task DeleteCountryByIdAsync(int id);
+    Task<bool> DeleteCountryByIdAsync(int id);
 }

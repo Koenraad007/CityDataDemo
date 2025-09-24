@@ -4,6 +4,8 @@ using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Repositories;
 using AP.CityDataDemo.Infrastructure.Data;
 using AP.CityDataDemo.Infrastructure.UOW;
+using FluentValidation;
+using AP.CityDataDemo.Application.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,9 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 // Add repositories
 builder.Services.AddScoped<ICityRepository, CityRepository>();
 builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+
+// Add FluentValidation
+builder.Services.AddValidatorsFromAssemblyContaining<AddCityDtoValidator>();
 
 var app = builder.Build();
 

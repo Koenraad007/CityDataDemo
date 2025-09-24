@@ -38,3 +38,5 @@
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/AP.CityDataDemo.Presentation.pdb
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/AP.CityDataDemo.Presentation.genruntimeconfig.cache
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/ref/AP.CityDataDemo.Presentation.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/bin/Debug/net8.0/FluentValidation.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.Presentation/bin/Debug/net8.0/FluentValidation.DependencyInjectionExtensions.dll
