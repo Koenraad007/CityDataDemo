@@ -1,3 +1,9 @@
+# Visual Studio Code and Visual Studio specific
 .vscode
 /.vs
+
+# Don't track the readme
 /README.md
+
+# Test-related files
+TestResults/

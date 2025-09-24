@@ -16,22 +16,22 @@ public class AddCityDtoValidator : AbstractValidator<AddCityDto>
 
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithMessage("De naam mag niet leeg zijn")
+            .WithMessage("Name cannot be empty")
             .MaximumLength(100)
-            .WithMessage("De naam mag niet langer zijn dan 100 karakters")
+            .WithMessage("Name cannot be longer than 100 characters")
             .MustAsync(async (name, cancellation) => !await _cityRepository.CityNameExistsAsync(name))
-            .WithMessage("De naam mag nog niet bestaan");
+            .WithMessage("Name already exists");
 
         RuleFor(x => x.Population)
             .GreaterThanOrEqualTo(0)
-            .WithMessage("Het aantal inwoners mag niet negatief zijn")
-            .LessThanOrEqualTo(50000000)
-            .WithMessage("Het aantal inwoners mag niet groter zijn dan 50.000.000");
+            .WithMessage("Population cannot be negative")
+            .LessThanOrEqualTo(10000000000)
+            .WithMessage("Population cannot be greater than 10,000,000,000");
 
         RuleFor(x => x.CountryId)
             .GreaterThan(0)
-            .WithMessage("Er moet een land gekozen worden")
+            .WithMessage("A country must be selected")
             .MustAsync(async (countryId, cancellation) => await _countryRepository.GetCountryByIdAsync(countryId) != null)
-            .WithMessage("Het gekozen land bestaat niet");
+            .WithMessage("The selected country does not exist");
     }
 }

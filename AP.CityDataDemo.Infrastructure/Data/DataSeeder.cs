@@ -31,10 +31,10 @@ public class DataSeeder : IDataSeeder
     {
         var countries = new List<Country>
         {
-            new() { Name = "Nederland" },
-            new() { Name = "België" },
-            new() { Name = "Duitsland" },
-            new() { Name = "Frankrijk" }
+            new() { Name = "Netherlands" },
+            new() { Name = "Belgium" },
+            new() { Name = "Germany" },
+            new() { Name = "France" }
         };
 
         foreach (var country in countries)
@@ -46,23 +46,23 @@ public class DataSeeder : IDataSeeder
     private async Task SeedCitiesAsync()
     {
         var countries = await _countryRepository.GetAllCountriesAsync();
-        var netherlands = countries.First(c => c.Name == "Nederland");
-        var belgium = countries.First(c => c.Name == "België");
-        var germany = countries.First(c => c.Name == "Duitsland");
-        var france = countries.First(c => c.Name == "Frankrijk");
+        var netherlands = countries.First(c => c.Name == "Netherlands");
+        var belgium = countries.First(c => c.Name == "Belgium");
+        var germany = countries.First(c => c.Name == "Germany");
+        var france = countries.First(c => c.Name == "France");
 
         var cities = new List<City>
         {
             new("Amsterdam", 872757, netherlands.Id),
             new("Rotterdam", 651446, netherlands.Id),
-            new("Den Haag", 548320, netherlands.Id),
+            new("The Hague", 548320, netherlands.Id),
             new("Utrecht", 361966, netherlands.Id),
-            new("Antwerpen", 530504, belgium.Id),
-            new("Brussel", 1208542, belgium.Id),
-            new("Gent", 263614, belgium.Id),
-            new("Berlijn", 3669491, germany.Id),
-            new("München", 1488202, germany.Id),
-            new("Parijs", 2161000, france.Id),
+            new("Antwerp", 530504, belgium.Id),
+            new("Brussels", 1208542, belgium.Id),
+            new("Ghent", 263614, belgium.Id),
+            new("Berlin", 3669491, germany.Id),
+            new("Munich", 1488202, germany.Id),
+            new("Paris", 2161000, france.Id),
             new("Lyon", 518635, france.Id)
         };
 

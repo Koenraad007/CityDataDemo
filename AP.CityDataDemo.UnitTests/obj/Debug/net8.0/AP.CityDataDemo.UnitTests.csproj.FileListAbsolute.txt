@@ -124,3 +124,5 @@
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.UnitTests/bin/Debug/net8.0/AP.CityDataDemo.Application.pdb
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.UnitTests/bin/Debug/net8.0/AP.CityDataDemo.Domain.pdb
 /Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.UnitTests/bin/Debug/net8.0/AP.CityDataDemo.Infrastructure.pdb
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.UnitTests/bin/Debug/net8.0/MediatR.dll
+/Users/samvanwouwe/Desktop/ASPMiniProject/CityDataDemo/AP.CityDataDemo.UnitTests/bin/Debug/net8.0/MediatR.Contracts.dll

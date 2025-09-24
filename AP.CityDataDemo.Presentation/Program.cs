@@ -1,5 +1,4 @@
 using AP.CityDataDemo.Presentation.Components;
-using AP.CityDataDemo.Application.Services;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Repositories;
 using AP.CityDataDemo.Infrastructure.Data;
@@ -12,14 +11,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Add API controllers
+builder.Services.AddControllers();
+
+// Add Swagger/OpenAPI services
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+// Add MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<AP.CityDataDemo.Application.CQRS.Queries.Cities.GetAllCitiesQuery>());
+
 // Add data store as singleton
 builder.Services.AddSingleton<IInMemoryDataStore, InMemoryDataStore>();
 
 // Add seeder
 builder.Services.AddScoped<IDataSeeder, DataSeeder>();
 
-// Add application services
-builder.Services.AddScoped<ICityService, CityService>();
 
 // Add Unit of Work
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -50,11 +57,20 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+else
+{
+    // Enable Swagger only in development
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+// Map API controllers
+app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

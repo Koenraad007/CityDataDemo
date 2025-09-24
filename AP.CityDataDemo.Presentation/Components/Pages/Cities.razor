@@ -1,23 +1,24 @@
 @page "/cities"
 @using AP.CityDataDemo.Application.DTOs
-@using AP.CityDataDemo.Application.Services
+@using AP.CityDataDemo.Application.CQRS.Queries.Cities
 @using AP.CityDataDemo.Application.Exceptions
 @using FluentValidation
-@inject ICityService CityService
+@using MediatR
+@inject IMediator Mediator
 @rendermode InteractiveServer
 
-<PageTitle>Steden</PageTitle>
+<PageTitle>Cities</PageTitle>
 
-<h1>Steden Overzicht</h1>
+<h1>Cities Overview</h1>
 
 <div class="row mb-4">
     <div class="col-md-6">
         <div class="mb-3">
             <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
-                Sorteer op Inwoners (Laag → Hoog)
+                Sort by Population (Low → High)
             </button>
             <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
-                Sorteer op Inwoners (Hoog → Laag)
+                Sort by Population (High → Low)
             </button>
         </div>
     </div>
@@ -25,11 +26,11 @@
         <button class="btn btn-success" @onclick="ToggleAddForm">
             @if (showAddForm)
             {
-                <span>➖ Verberg Formulier</span>
+                <span>➖ Hide Form</span>
             }
             else
             {
-                <span>➕ Stad Toevoegen</span>
+                <span>➕ Add City</span>
             }
         </button>
     </div>
@@ -50,16 +51,16 @@
 }
 else if (cities == null)
 {
-    <p><em>Laden...</em></p>
+    <p><em>Loading...</em></p>
 }
 else
 {
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Stad</th>
-                <th>Land</th>
-                <th>Aantal Inwoners</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Population</th>
             </tr>
         </thead>
         <tbody>
@@ -84,7 +85,7 @@ else
     {
         try
         {
-            cities = await CityService.GetAllCitiesAsync();
+            cities = await Mediator.Send(new GetAllCitiesQuery());
         }
         catch (Exception)
         {
@@ -96,7 +97,7 @@ else
     {
         try
         {
-            cities = await CityService.GetCitiesSortedByPopulationAsync(descending);
+            cities = await Mediator.Send(new GetCitiesSortedByPopulationQuery(descending));
             errorMessage = null;
         }
         catch (Exception)
@@ -120,7 +121,7 @@ else
     {
         try
         {
-            cities = await CityService.GetAllCitiesAsync();
+            cities = await Mediator.Send(new GetAllCitiesQuery());
             errorMessage = null;
         }
         catch (Exception)

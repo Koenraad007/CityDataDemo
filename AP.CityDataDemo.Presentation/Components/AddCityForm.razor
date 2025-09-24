@@ -1,13 +1,15 @@
 @using AP.CityDataDemo.Application.DTOs
-@using AP.CityDataDemo.Application.Services
+@using AP.CityDataDemo.Application.CQRS.Queries.Countries
+@using AP.CityDataDemo.Application.CQRS.Commands.Cities
 @using AP.CityDataDemo.Application.Exceptions
 @using System.ComponentModel.DataAnnotations
 @using FluentValidation
-@inject ICityService CityService
+@using MediatR
+@inject IMediator Mediator
 
 <div class="card">
     <div class="card-header">
-        <h5 class="card-title mb-0">Nieuwe Stad Toevoegen</h5>
+        <h5 class="card-title mb-0">Add New City</h5>
     </div>
     <div class="card-body">
         <EditForm Model="@addCityDto" OnValidSubmit="@HandleValidSubmit" FormName="AddCityForm">
@@ -24,21 +26,21 @@
             }
 
             <div class="mb-3">
-                <label for="cityName" class="form-label">Stad Naam</label>
+                <label for="cityName" class="form-label">City Name</label>
                 <InputText id="cityName" class="form-control" @bind-Value="addCityDto.Name" />
                 <ValidationMessage For="@(() => addCityDto.Name)" />
             </div>
 
             <div class="mb-3">
-                <label for="population" class="form-label">Aantal Inwoners</label>
+                <label for="population" class="form-label">Population</label>
                 <InputNumber id="population" class="form-control" @bind-Value="addCityDto.Population" />
                 <ValidationMessage For="@(() => addCityDto.Population)" />
             </div>
 
             <div class="mb-3">
-                <label for="country" class="form-label">Land</label>
+                <label for="country" class="form-label">Country</label>
                 <InputSelect id="country" class="form-select" @bind-Value="addCityDto.CountryId">
-                    <option value="0">-- Selecteer een land --</option>
+                    <option value="0">-- Select a country --</option>
                     @if (countries != null)
                     {
                         @foreach (var country in countries)
@@ -55,11 +57,11 @@
                     @if (isSubmitting)
                     {
                         <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <span>Bezig met opslaan...</span>
+                        <span>Saving...</span>
                     }
                     else
                     {
-                        <span>Stad Toevoegen</span>
+                        <span>Add City</span>
                     }
                 </button>
                 <button type="button" class="btn btn-secondary" @onclick="ResetForm">Reset</button>
@@ -81,11 +83,11 @@
     {
         try
         {
-            countries = await CityService.GetAllCountriesAsync();
+            countries = await Mediator.Send(new GetAllCountriesQuery());
         }
         catch (Exception)
         {
-            errorMessage = "Kon landen niet laden. Probeer het later opnieuw.";
+            errorMessage = "Could not load countries. Please try again later.";
         }
     }
 
@@ -97,21 +99,21 @@
             errorMessage = null;
             successMessage = null;
 
-            var result = await CityService.CreateCityAsync(addCityDto);
+            var result = await Mediator.Send(new CreateCityCommand(addCityDto));
             
-            successMessage = $"Stad '{result.Name}' is succesvol toegevoegd!";
+            successMessage = $"City '{result.Name}' has been successfully added!";
             ResetForm();
             
             await OnCityAdded.InvokeAsync();
         }
         catch (FluentValidation.ValidationException ex)
         {
-            // Toon de eerste validatiefout van FluentValidation
+            // Show the first validation error from FluentValidation
             errorMessage = ex.Errors?.FirstOrDefault()?.ErrorMessage ?? ex.Message;
         }
         catch (ArgumentException ex)
         {
-            // Domain guards (bijv. uit City constructor)
+            // Domain guards (e.g. from City constructor)
             errorMessage = ex.Message;
         }
         catch (NotFoundException ex)
@@ -120,7 +122,7 @@
         }
         catch (Exception)
         {
-            errorMessage = "Er is een fout opgetreden bij het toevoegen van de stad. Probeer het later opnieuw.";
+            errorMessage = "An error occurred while adding the city. Please try again later.";
         }
         finally
         {
