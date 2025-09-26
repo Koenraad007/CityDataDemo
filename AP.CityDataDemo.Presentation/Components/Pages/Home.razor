@@ -1,7 +1,58 @@
 ﻿@page "/"
+@using AP.CityDataDemo.Application.Interfaces
+@using AP.CityDataDemo.Application.Services
+@using AP.CityDataDemo.Domain
+@using AP.CityDataDemo.Infrastructure.UoW
+@using AP.MyGameStore.Application.CQRS.Cities
+@using MediatR
+@using System.Collections
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+
+@if (_cities.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Population</th>
+                <th>Country</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in _cities)
+            {
+                <tr>
+                    <td>@city.Name</td>
+                    <td>@city.Population</td>
+                    <td>@city.Country</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Loading cities...</p>
+}
+@inject IMediator Mediator
+@code {
+    private IEnumerable<City> _cities = new List<City>();
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+
+        _cities = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
+        
+        Console.WriteLine("Cities loaded:");
+        foreach (var city in _cities)
+        {
+            Console.WriteLine($"Name: {city.Name}, Population: {city.Population}, Country: {city.Country}");
+        }
+
+    }
+}

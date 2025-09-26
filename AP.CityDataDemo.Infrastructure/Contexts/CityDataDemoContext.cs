@@ -16,6 +16,7 @@ namespace AP.CityDataDemo.Infrastructure.Contexts
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.Entity<City>().Seed();
+            modelBuilder.Entity<Country>().Seed();
         }
     }
 }

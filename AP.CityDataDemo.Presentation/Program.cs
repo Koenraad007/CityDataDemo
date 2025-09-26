@@ -1,10 +1,17 @@
+using System.Reflection;
+using AP.CityDataDemo.Application.Extensions;
+using AP.CityDataDemo.Infrastructure.Extensions;
 using AP.CityDataDemo.Presentation.Components;
+using AP.MyGameStore.Application.CQRS.Cities;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.RegisterApplication();
+builder.Services.RegisterInfrastructure();
 
 var app = builder.Build();
 

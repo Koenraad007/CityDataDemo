@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace AP.CityDataDemo.Infrastructure.Seeding
 {
-    public static class CitiesSeeding
+    public static class CountrySeeding
     {
-        public static void Seed(this EntityTypeBuilder<City> modelBuilder)
+        public static void Seed(this EntityTypeBuilder<Country> modelBuilder)
         {
             modelBuilder.HasData(
-                new City() { Id = 1, Name = "London", Population = 9800000, CountryId = 1 }
+                new Country() { Id = 1, Name = "UK" }
             );
         }
     }

@@ -1,1 +1,12 @@
+AP.CityDataDemo.Presentation/bin
+AP.CityDataDemo.Presentation/obj
+AP.CityDataDemo.Infrastructure/bin
+AP.CityDataDemo.Infrastructure/obj
+AP.CityDataDemo.Application/bin
+AP.CityDataDemo.Application/obj
+AP.CityDataDemo.Domain/bin
+AP.CityDataDemo.Domain/obj
+AP.CityDataDemo.Tests/bin
+AP.CityDataDemo.Tests/obj
+.DS_Store
 .vscode

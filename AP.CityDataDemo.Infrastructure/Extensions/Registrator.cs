@@ -20,7 +20,7 @@ namespace AP.CityDataDemo.Infrastructure.Extensions
         {
             services.AddDbContext<CityDataDemoContext>(options =>
             {
-                options.UseInMemoryDatabase(databaseName: "CityDataDemoDB");
+                options.UseSqlite("Data Source=citydatademo.db");
             });
             return services;
         }
