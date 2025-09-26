@@ -10,4 +10,8 @@
     <ProjectReference Include="../AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
+  </ItemGroup>
+
 </Project>

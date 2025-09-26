@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "HoGHAXni8Ek=",
+  "dgSpecHash": "upfL85Wk8uI=",
   "success": true,
   "projectFilePath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/koenv/.nuget/packages/microsoft.extensions.dependencyinjection/9.0.9/microsoft.extensions.dependencyinjection.9.0.9.nupkg.sha512",
+    "/Users/koenv/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/9.0.9/microsoft.extensions.dependencyinjection.abstractions.9.0.9.nupkg.sha512"
+  ],
   "logs": []
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AP.CityDataDemo.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e062bad2fffe906f8a3c2f44a6589631821da942")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+daa793d746e3d85e60a4ec09255582354372e1bd")]
 [assembly: System.Reflection.AssemblyProductAttribute("AP.CityDataDemo.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AP.CityDataDemo.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

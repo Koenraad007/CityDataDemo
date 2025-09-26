@@ -1008,7 +1008,8 @@
         "type": "project",
         "framework": ".NETCoreApp,Version=v8.0",
         "dependencies": {
-          "AP.CityDataDemo.Domain": "1.0.0"
+          "AP.CityDataDemo.Domain": "1.0.0",
+          "Microsoft.Extensions.DependencyInjection": "9.0.9"
         },
         "compile": {
           "bin/placeholder/AP.CityDataDemo.Application.dll": {}
