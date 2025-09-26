@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YhZF5rXMN9o=",
+  "dgSpecHash": "2ZvcYXoeHeA=",
   "success": true,
   "projectFilePath": "/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -23,6 +23,7 @@
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.abstractions/9.0.9/microsoft.entityframeworkcore.abstractions.9.0.9.nupkg.sha512",
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.analyzers/9.0.9/microsoft.entityframeworkcore.analyzers.9.0.9.nupkg.sha512",
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.design/9.0.9/microsoft.entityframeworkcore.design.9.0.9.nupkg.sha512",
+    "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.inmemory/9.0.9/microsoft.entityframeworkcore.inmemory.9.0.9.nupkg.sha512",
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.relational/9.0.9/microsoft.entityframeworkcore.relational.9.0.9.nupkg.sha512",
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.sqlserver/9.0.9/microsoft.entityframeworkcore.sqlserver.9.0.9.nupkg.sha512",
     "/Users/koenv/.nuget/packages/microsoft.entityframeworkcore.tools/9.0.9/microsoft.entityframeworkcore.tools.9.0.9.nupkg.sha512",

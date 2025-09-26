@@ -20,7 +20,7 @@ namespace AP.CityDataDemo.Infrastructure.Extensions
         {
             services.AddDbContext<CityDataDemoContext>(options =>
             {
-                options.UseSqlServer("name=ConnectionStrings:CityDataDb");
+                options.UseInMemoryDatabase(databaseName: "CityDataDemoDB");
             });
             return services;
         }
