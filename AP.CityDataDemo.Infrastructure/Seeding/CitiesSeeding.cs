@@ -8,7 +8,7 @@ namespace AP.CityDataDemo.Infrastructure.Seeding
         public static void Seed(this EntityTypeBuilder<City> modelBuilder)
         {
             modelBuilder.HasData(
-                new City() { Name = "London", Population = 9800000, Country = new Country() { Name = "United Kingdom" } }
+                new City() { Name = "London", Population = 9800000, Country = new Country() { Id = 1, Name = "United Kingdom" } }
             );
         }
     }
