@@ -1,4 +1,4 @@
-namespace AP.CityDataDemo.Infrastructure.UnitOfWork
+namespace AP.CityDataDemo.Infrastructure.UoW
 {
     using AP.CityDataDemo.Application.Interfaces;
     using System.Threading.Tasks;

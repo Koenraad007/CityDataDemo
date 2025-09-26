@@ -1034,7 +1034,8 @@
         "dependencies": {
           "AP.CityDataDemo.Application": "1.0.0",
           "AP.CityDataDemo.Domain": "1.0.0",
-          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.9"
+          "Microsoft.EntityFrameworkCore.SqlServer": "9.0.9",
+          "Microsoft.Extensions.DependencyInjection": "9.0.9"
         },
         "compile": {
           "bin/placeholder/AP.CityDataDemo.Infrastructure.dll": {}
