@@ -29,7 +29,7 @@ Welcome to your new app.
                 <tr>
                     <td>@city.Name</td>
                     <td>@city.Population</td>
-                    <td>@city.Country</td>
+                    <td>@city.Country?.Name</td>
                 </tr>
             }
         </tbody>
@@ -51,7 +51,7 @@ else
         Console.WriteLine("Cities loaded:");
         foreach (var city in _cities)
         {
-            Console.WriteLine($"Name: {city.Name}, Population: {city.Population}, Country: {city.Country}");
+            Console.WriteLine($"Name: {city.Name}, Population: {city.Population}, Country: {city.Country?.Name}");
         }
 
     }
