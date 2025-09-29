@@ -30,20 +30,12 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9BcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Counter.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Db3VudGVyLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
 [/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Error.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9FcnJvci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9Ib21lLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Weather.razor]
-build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9XZWF0aGVyLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Routes.razor]
@@ -61,3 +53,7 @@ build_metadata.AdditionalFiles.CssScope = b-7debilfsjf
 [/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Layout/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9MYXlvdXQvTmF2TWVudS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = b-ed5s8izs1v
+
+[/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/Components/Pages/Cities/Cities.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50cy9QYWdlcy9DaXRpZXMvQ2l0aWVzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-2cw2s0tsfg

@@ -1,0 +1,124 @@
+@page "/cities"
+@rendermode InteractiveServer
+@using AP.CityDataDemo.Domain
+@using AP.MyGameStore.Application.CQRS.Cities
+@using MediatR
+
+<h3>Cities</h3>
+
+@if (CitiesList == null)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else if (!CitiesList.Any())
+{
+    <div class="alert alert-info">No cities found.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+                <th>Population</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in CitiesList)
+            {
+                <tr>
+                    <td>@city.Name</td>
+                    <td>@city.Country.Name</td>
+                    <td>@city.Population</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" @onclick="() => ShowEditPopup(city)">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* Modal for editing city (always outside the table/logic blocks) *@
+@if (IsEditPopupVisible && SelectedCity != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit City</h5>
+                    <button type="button" class="btn-close" @onclick="CloseEditPopup" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input class="form-control" @bind="SelectedCity.Name" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Population</label>
+                        <input type="number" class="form-control" @bind="SelectedCity.Population" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <input class="form-control" @bind="SelectedCity.Country.Name" disabled />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseEditPopup">Cancel</button>
+                    <button class="btn btn-primary" @onclick="SaveEdit">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@inject IMediator Mediator
+
+@code {
+    public IEnumerable<City> CitiesList = new List<City>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(1000);
+        CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
+    }
+
+    public bool IsEditPopupVisible { get; set; } = false;
+
+    public City? SelectedCity { get; set; }
+
+    public void ShowEditPopup(City city)
+    {
+        // Create a copy to avoid editing the list directly until save
+        SelectedCity = new City
+        {
+            Id = city.Id,
+            Name = city.Name,
+            Population = city.Population,
+            CountryId = city.CountryId,
+            Country = city.Country
+        };
+        IsEditPopupVisible = true;
+    }
+
+    public void CloseEditPopup()
+    {
+        IsEditPopupVisible = false;
+        SelectedCity = null;
+    }
+
+    public void SaveEdit()
+    {
+        if (SelectedCity != null)
+        {
+            // Here you would call your update logic, e.g. send a command to update the city
+            // For now, just close the popup
+            IsEditPopupVisible = false;
+            SelectedCity = null;
+        }
+    }
+}
