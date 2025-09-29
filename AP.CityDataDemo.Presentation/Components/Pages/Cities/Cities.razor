@@ -1,7 +1,8 @@
 @page "/cities"
 @rendermode InteractiveServer
+@using AP.CityDataDemo.Application.CQRS.Commands.Cities
 @using AP.CityDataDemo.Domain
-@using AP.MyGameStore.Application.CQRS.Cities
+@using AP.MyGameStore.Application.CQRS.Queries.Cities
 @using MediatR
 
 <h3>Cities</h3>
@@ -111,14 +112,22 @@ else
         SelectedCity = null;
     }
 
-    public void SaveEdit()
+    public async Task SaveEdit()
     {
         if (SelectedCity != null)
         {
-            // Here you would call your update logic, e.g. send a command to update the city
-            // For now, just close the popup
+            // Send EditCityCommand via Mediator
+            var command = new EditCityCommand(
+                SelectedCity.Id,
+                SelectedCity.Name,
+                SelectedCity.Population,
+                SelectedCity.CountryId
+            );
+            await Mediator.Send(command);
             IsEditPopupVisible = false;
             SelectedCity = null;
+            // Optionally refresh the list
+            CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
         }
     }
 }

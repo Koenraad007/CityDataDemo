@@ -2,7 +2,7 @@ using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Domain;
 using MediatR;
 
-namespace AP.MyGameStore.Application.CQRS.Cities
+namespace AP.MyGameStore.Application.CQRS.Queries.Cities
 {
     public class GetAllCitiesQuery : IRequest<IEnumerable<City>>
     {
