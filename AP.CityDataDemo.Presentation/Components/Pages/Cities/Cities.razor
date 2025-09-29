@@ -1,6 +1,7 @@
 @page "/cities"
 @rendermode InteractiveServer
 @using AP.CityDataDemo.Application.CQRS.Commands.Cities
+@using AP.CityDataDemo.Application.CQRS.Queries.Countries
 @using AP.CityDataDemo.Domain
 @using AP.MyGameStore.Application.CQRS.Queries.Cities
 @using MediatR
@@ -57,7 +58,7 @@ else
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input class="form-control" @bind="SelectedCity.Name" />
+                        <input class="form-control" @bind="SelectedCity.Name" disabled />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Population</label>
@@ -65,7 +66,16 @@ else
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Country</label>
-                        <input class="form-control" @bind="SelectedCity.Country.Name" disabled />
+                        <select class="form-select" @bind="SelectedCity.CountryId">
+                            <option value="">Select a country</option>
+                            @if (CountriesList != null)
+                            {
+                                foreach (var country in CountriesList)
+                                {
+                                    <option value="@country.Id">@country.Name</option>
+                                }
+                            }
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -81,11 +91,13 @@ else
 
 @code {
     public IEnumerable<City> CitiesList = new List<City>();
+    public IEnumerable<Country> CountriesList = new List<Country>();
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(1000);
         CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
+        CountriesList = await Mediator.Send(new GetAllCountriesQuery { PageNr = 1, PageSize = 100 });
     }
 
     public bool IsEditPopupVisible { get; set; } = false;
