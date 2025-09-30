@@ -10,7 +10,6 @@ namespace AP.CityDataDemo.Infrastructure.Configuration
         {
             builder.ToTable("tblCountries", "Country")
                    .HasKey(c => c.Id);
-            builder.HasIndex(c => c.Id);
 
             builder.Property(c => c.Id)
                    .IsRequired()
