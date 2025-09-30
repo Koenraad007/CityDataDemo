@@ -1,7 +1,7 @@
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Contexts;
 using AP.CityDataDemo.Infrastructure.Repositories;
-using AP.CityDataDemo.Infrastructure.UoW;
+using AP.CityDataDemo.Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
