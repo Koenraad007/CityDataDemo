@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AP.CityDataDemo.Infrastructure.Migrations
 {
     [DbContext(typeof(CityDataDemoContext))]
-    [Migration("20250926095829_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250930135047_InitSqlite")]
+    partial class InitSqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -30,7 +30,9 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Population")
                         .HasColumnType("int");
@@ -38,9 +40,6 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("tblCities", "City");
 
@@ -62,12 +61,11 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("tblCountries", "Country");
 

@@ -27,7 +27,9 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Population")
                         .HasColumnType("int");
@@ -35,9 +37,6 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("tblCities", "City");
 
@@ -59,12 +58,11 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(100)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Id")
-                        .IsUnique();
 
                     b.ToTable("tblCountries", "Country");
 

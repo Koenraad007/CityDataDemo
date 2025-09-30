@@ -5,7 +5,7 @@
 namespace AP.CityDataDemo.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitSqlite : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -23,7 +23,7 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -37,7 +37,7 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "nvarchar(100)", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     Population = table.Column<int>(type: "int", nullable: false),
                     CountryId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
@@ -70,20 +70,6 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                 schema: "City",
                 table: "tblCities",
                 column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCities_Id",
-                schema: "City",
-                table: "tblCities",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_tblCountries_Id",
-                schema: "Country",
-                table: "tblCountries",
-                column: "Id",
-                unique: true);
         }
 
         /// <inheritdoc />

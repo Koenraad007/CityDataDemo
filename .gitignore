@@ -29,10 +29,6 @@ TestResults/
 *.TestResults/
 *.publish/
 
-## Database and local config
-*.db
-appsettings.Development.json
-
 ## Logs and temp files
 *.log
 *.tmp
