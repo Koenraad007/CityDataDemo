@@ -1,8 +1,6 @@
-using System.Reflection;
 using AP.CityDataDemo.Application.Extensions;
 using AP.CityDataDemo.Infrastructure.Extensions;
 using AP.CityDataDemo.Presentation.Components;
-using AP.MyGameStore.Application.CQRS.Queries.Cities;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -37,3 +37,7 @@ appsettings.Development.json
 *.log
 *.tmp
 *.bak
+
+## Env files
+.env
+.env.local
