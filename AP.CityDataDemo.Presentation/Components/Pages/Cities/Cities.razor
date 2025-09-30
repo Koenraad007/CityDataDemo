@@ -101,13 +101,14 @@ else
 @inject IMediator Mediator
 
 @code {
-    public IEnumerable<City> CitiesList = new List<City>();
-    public IEnumerable<Country> CountriesList = new List<Country>();
+    public IEnumerable<City> CitiesList { get; set; } = new List<City>();
+    public IEnumerable<Country> CountriesList { get; set; } = new List<Country>();
     public List<string> ValidationErrors { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000);
+        CitiesList = null;
+        StateHasChanged();
         CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
         CountriesList = await Mediator.Send(new GetAllCountriesQuery { PageNr = 1, PageSize = 100 });
     }
