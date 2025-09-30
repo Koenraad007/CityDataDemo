@@ -29,6 +29,7 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
         public async Task<bool> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
             await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id);
+            await _unitOfWork.Commit();
             return true;
         }
     }
