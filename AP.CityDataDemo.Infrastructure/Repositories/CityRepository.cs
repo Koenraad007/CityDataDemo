@@ -3,61 +3,68 @@ using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 
-namespace AP.CityDataDemo.Infrastructure.Repositories;
-
-public class CityRepository : GenericRepository<City>, ICityRepository
+namespace AP.CityDataDemo.Infrastructure.Repositories
 {
-    public CityRepository(CityDataDemoContext ctx) : base(ctx)
+    public class CityRepository : GenericRepository<City>, ICityRepository
     {
-    }
 
-    public async Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
-    {
-        IQueryable<City> query = _dbSet;
-        if (sortByName)
+        public CityRepository(CityDataDemoContext ctx) : base(ctx)
         {
-            query = descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
         }
-        else
+
+        public async Task<int> GetCountAsync()
         {
-            query = descending ? query.OrderByDescending(c => c.Population) : query.OrderBy(c => c.Population);
+            return await _dbSet.CountAsync();
         }
-        return await query.ToListAsync();
-    }
 
-    public Task<City?> GetCityByIdAsync(int id)
-    {
-        return GetByIdAsync(id);
-    }
+        public async Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
+        {
+            IQueryable<City> query = _dbSet;
+            if (sortByName)
+            {
+                query = descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
+            }
+            else
+            {
+                query = descending ? query.OrderByDescending(c => c.Population) : query.OrderBy(c => c.Population);
+            }
+            return await query.ToListAsync();
+        }
 
-    public Task AddCityAsync(City city)
-    {
-        return AddAsync(city);
-    }
+        public Task<City?> GetCityByIdAsync(int id)
+        {
+            return GetByIdAsync(id);
+        }
 
-    public Task AddCitiesAsync(IEnumerable<City> cities)
-    {
-        return AddRangeAsync(cities);
-    }
+        public Task AddCityAsync(City city)
+        {
+            return AddAsync(city);
+        }
 
-    public Task<bool> UpdateCityAsync(City city)
-    {
-        return UpdateAsync(city);
-    }
+        public Task AddCitiesAsync(IEnumerable<City> cities)
+        {
+            return AddRangeAsync(cities);
+        }
 
-    public Task DeleteCityAsync(City city)
-    {
-        return DeleteAsync(city);
-    }
+        public Task<bool> UpdateCityAsync(City city)
+        {
+            return UpdateAsync(city);
+        }
 
-    public Task<bool> DeleteCityByIdAsync(int id)
-    {
-        return DeleteByIdAsync(id);
-    }
+        public Task DeleteCityAsync(City city)
+        {
+            return DeleteAsync(city);
+        }
 
-    public async Task<bool> CityNameExistsAsync(string name)
-    {
-        return await _dbSet.AnyAsync(c => c.Name.ToLower() == name.ToLower());
-    }
+        public Task<bool> DeleteCityByIdAsync(int id)
+        {
+            return DeleteByIdAsync(id);
+        }
 
+        public async Task<bool> CityNameExistsAsync(string name)
+        {
+            return await _dbSet.AnyAsync(c => c.Name.ToLower() == name.ToLower());
+        }
+
+    }
 }

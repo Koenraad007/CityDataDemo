@@ -1,3 +1,6 @@
+using FluentValidation;
+using System.Threading;
+using System.Threading.Tasks;
 
 using AP.CityDataDemo.Application.Interfaces;
 using MediatR;
@@ -27,6 +30,25 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
         {
             await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id);
             return true;
+        }
+    }
+
+    public class DeleteCommandValidator : AbstractValidator<DeleteCommand>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public DeleteCommandValidator(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+
+            RuleFor(x => x.Id)
+                .MustAsync(NotLastCity).WithMessage("Cannot delete the last city in the database.");
+        }
+
+        private async Task<bool> NotLastCity(int cityId, CancellationToken cancellationToken)
+        {
+            var count = await _unitOfWork.CitiesRepository.GetCountAsync();
+            return count > 1;
         }
     }
 }

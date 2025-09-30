@@ -12,4 +12,5 @@ public interface ICityRepository : IGenericRepository<City>
     Task DeleteCityAsync(City city);
     Task<bool> DeleteCityByIdAsync(int id);
     Task<bool> CityNameExistsAsync(string name);
+    Task<int> GetCountAsync();
 }
