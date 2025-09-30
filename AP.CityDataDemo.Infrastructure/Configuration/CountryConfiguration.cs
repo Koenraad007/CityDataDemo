@@ -10,7 +10,7 @@ namespace AP.CityDataDemo.Infrastructure.Configuration
         {
             builder.ToTable("tblCountries", "Country")
                    .HasKey(c => c.Id);
-            builder.HasIndex(c => c.Id).IsUnique();
+            builder.HasIndex(c => c.Id);
 
             builder.Property(c => c.Id)
                    .IsRequired()
@@ -18,7 +18,8 @@ namespace AP.CityDataDemo.Infrastructure.Configuration
 
             builder.Property(c => c.Name)
                    .IsRequired()
-                   .HasColumnType("nvarchar(100)");
+                   .HasMaxLength(100)
+                   .IsUnicode(true);
         }
     }
 }
