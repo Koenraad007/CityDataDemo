@@ -76,8 +76,11 @@ else
                     <td>@city.CountryName</td>
                     <td>@city.Population.ToString("N0")</td>
                     <td>
-                        <button class="btn btn-sm btn-warning" @onclick="() => ShowEditPopup(city)">
+                        <button class="btn btn-sm btn-warning me-2" @onclick="() => ShowEditPopup(city)">
                             Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteCity(city.Id)">
+                            Delete
                         </button>
                     </td>
                 </tr>
@@ -243,6 +246,23 @@ else
             catch (FluentValidation.ValidationException ex)
             {
                 ValidationErrors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+            }
+        }
+    }
+
+    public async Task DeleteCity(int cityId)
+    {
+        if (cityId != 0)
+        {
+            var command = new DeleteCommand(cityId);
+            try
+            {
+                await Mediator.Send(command);
+                CitiesList = await Mediator.Send(new GetAllCitiesQuery());
+            }
+            catch (Exception)
+            {
+                errorMessage = "Sorry, we could not delete the city at this time.";
             }
         }
     }
