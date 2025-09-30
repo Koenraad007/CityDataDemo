@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 
 using AP.CityDataDemo.Application.Interfaces;
 using MediatR;
+using AP.CityDataDemo.Application.Exceptions;
 
 namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
 {
@@ -28,7 +29,12 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
 
         public async Task<bool> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
-            await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id);
+            var deleted = await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id);
+            if (!deleted)
+            {
+                // either return false and let controller translate, or:
+                throw new NotFoundException($"City {request.Id} not found");
+            }
             await _unitOfWork.Commit();
             return true;
         }
