@@ -33,13 +33,11 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
         public async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task AddRangeAsync(IEnumerable<T> entities)
         {
             await _dbSet.AddRangeAsync(entities);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> UpdateAsync(T entity)
@@ -51,7 +49,6 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
         public async Task DeleteAsync(T entity)
         {
             _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<bool> DeleteByIdAsync(int id)
@@ -60,7 +57,7 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
             if (entity == null)
                 return false;
             _dbSet.Remove(entity);
-            return await _context.SaveChangesAsync() > 0;
+            return true;
         }
     }
 }
