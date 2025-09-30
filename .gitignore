@@ -1,12 +1,39 @@
-AP.CityDataDemo.Presentation/bin
-AP.CityDataDemo.Presentation/obj
-AP.CityDataDemo.Infrastructure/bin
-AP.CityDataDemo.Infrastructure/obj
-AP.CityDataDemo.Application/bin
-AP.CityDataDemo.Application/obj
-AP.CityDataDemo.Domain/bin
-AP.CityDataDemo.Domain/obj
-AP.CityDataDemo.UnitTests/bin
-AP.CityDataDemo.UnitTests/obj
+## Build results
+**/bin/
+**/obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## IDE directories
+.vs/
+.vscode/
+
+## OS generated files
 .DS_Store
-.vscode
+Thumbs.db
+
+## NuGet and package artifacts
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Publish and test results
+TestResults/
+*.TestResults/
+*.publish/
+
+## Database and local config
+*.db
+appsettings.Development.json
+
+## Logs and temp files
+*.log
+*.tmp
+*.bak
