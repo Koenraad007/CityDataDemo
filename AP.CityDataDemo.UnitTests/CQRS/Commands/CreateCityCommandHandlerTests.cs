@@ -41,12 +41,9 @@ public class CreateCityCommandHandlerTests
         var country = new Country { Id = 1, Name = "Test Country" };
         var command = new CreateCityCommand(validDto);
 
-        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1))
-            .ReturnsAsync(country);
-        _mockCityRepository.Setup(x => x.CityNameExistsAsync("Test City"))
-            .ReturnsAsync(false);
-        _mockCityRepository.Setup(x => x.AddCityAsync(It.IsAny<City>()))
-            .Returns(Task.CompletedTask);
+        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1, CancellationToken.None)).ReturnsAsync(country);
+        _mockCityRepository.Setup(x => x.CityNameExistsAsync("Test City", CancellationToken.None)).ReturnsAsync(false);
+        _mockCityRepository.Setup(x => x.AddCityAsync(It.IsAny<City>(), CancellationToken.None)).Returns(Task.CompletedTask);
         
         var result = await _handler.Handle(command, CancellationToken.None);
 
@@ -55,14 +52,14 @@ public class CreateCityCommandHandlerTests
         Assert.AreEqual(validDto.CountryId, result.CountryId);
         Assert.AreEqual(country.Name, result.CountryName);
 
-        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>()), Times.Once);
-        _mockUnitOfWork.Verify(x => x.Commit(), Times.Once);
+        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>(), CancellationToken.None), Times.Once);
+        _mockUnitOfWork.Verify(x => x.Commit(CancellationToken.None), Times.Once);
     }
 
     [TestMethod]
     public async Task Handle_Should_Throw_ValidationException_When_Name_Is_Empty()
     {
-        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1))
+        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1, CancellationToken.None))
             .ReturnsAsync(new Country { Id = 1, Name = "Test Country" });
 
         var invalidDto = new AddCityDto { Name = "", Population = 1000, CountryId = 1 };
@@ -72,15 +69,15 @@ public class CreateCityCommandHandlerTests
             () => _handler.Handle(command, CancellationToken.None));
 
         Assert.IsTrue(exception.Message.Contains("Name cannot be empty"));
-        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>()), Times.Never);
+        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>(), CancellationToken.None), Times.Never);
     }
 
     [TestMethod]
     public async Task Handle_Should_Throw_ValidationException_When_Name_Already_Exists()
     {
-        _mockCityRepository.Setup(x => x.CityNameExistsAsync("Existing City"))
+        _mockCityRepository.Setup(x => x.CityNameExistsAsync("Existing City", CancellationToken.None))
             .ReturnsAsync(true);
-        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1))
+        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1, CancellationToken.None))
             .ReturnsAsync(new Country { Id = 1, Name = "Test Country" });
 
         var invalidDto = new AddCityDto { Name = "Existing City", Population = 1000, CountryId = 1 };
@@ -90,15 +87,15 @@ public class CreateCityCommandHandlerTests
             () => _handler.Handle(command, CancellationToken.None));
 
         Assert.IsTrue(exception.Message.Contains("Name already exists"));
-        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>()), Times.Never);
+        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>(), CancellationToken.None), Times.Never);
     }
 
     [TestMethod]
     public async Task Handle_Should_Throw_ValidationException_When_Country_Does_Not_Exist()
     {
-        _mockCityRepository.Setup(x => x.CityNameExistsAsync(It.IsAny<string>()))
+        _mockCityRepository.Setup(x => x.CityNameExistsAsync(It.IsAny<string>(), CancellationToken.None))
             .ReturnsAsync(false);
-        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(999))
+        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(999, CancellationToken.None))
             .ReturnsAsync((Country?)null);
 
         var invalidDto = new AddCityDto { Name = "Test City", Population = 1000, CountryId = 999 };
@@ -108,6 +105,6 @@ public class CreateCityCommandHandlerTests
             () => _handler.Handle(command, CancellationToken.None));
 
         Assert.IsTrue(exception.Message.Contains("The selected country does not exist"));
-        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>()), Times.Never);
+        _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>(), CancellationToken.None), Times.Never);
     }
 }

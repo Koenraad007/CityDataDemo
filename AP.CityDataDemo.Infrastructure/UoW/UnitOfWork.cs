@@ -21,9 +21,9 @@ namespace AP.CityDataDemo.Infrastructure.UOW
 
         public ICountryRepository CountriesRepository => _countriesRepository;
 
-        public async Task Commit()
+        public async Task Commit(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

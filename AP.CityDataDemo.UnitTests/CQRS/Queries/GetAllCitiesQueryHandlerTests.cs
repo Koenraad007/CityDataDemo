@@ -33,9 +33,9 @@ public class GetAllCitiesQueryHandlerTests
             new() { Id = 1, Name = "USA" }
         };
 
-        _mockUnitOfWork.Setup(x => x.CitiesRepository.GetAllAsync(true, false))
+        _mockUnitOfWork.Setup(x => x.CitiesRepository.GetAllAsync(true, false, CancellationToken.None))
             .ReturnsAsync(cities);
-        _mockUnitOfWork.Setup(x => x.CountriesRepository.GetAllAsync())
+        _mockUnitOfWork.Setup(x => x.CountriesRepository.GetAllAsync(CancellationToken.None))
             .ReturnsAsync(countries);
 
         var query = new GetAllCitiesQuery();
@@ -44,7 +44,7 @@ public class GetAllCitiesQueryHandlerTests
         Assert.AreEqual(2, result.Count());
         Assert.IsTrue(result.All(c => c.CountryName == "USA"));
 
-        _mockUnitOfWork.Verify(x => x.CitiesRepository.GetAllAsync(true, false), Times.Once);
-        _mockUnitOfWork.Verify(x => x.CountriesRepository.GetAllAsync(), Times.Once);
+        _mockUnitOfWork.Verify(x => x.CitiesRepository.GetAllAsync(true, false, CancellationToken.None), Times.Once);
+        _mockUnitOfWork.Verify(x => x.CountriesRepository.GetAllAsync(CancellationToken.None), Times.Once);
     }
 }

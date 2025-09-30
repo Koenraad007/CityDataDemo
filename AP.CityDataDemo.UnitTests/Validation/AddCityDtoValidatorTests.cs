@@ -25,9 +25,9 @@ public class AddCityDtoValidatorTests
     [TestMethod]
     public async Task Should_Have_Error_When_Population_Is_Too_High()
     {
-        _mockCityRepository.Setup(x => x.CityNameExistsAsync(It.IsAny<string>()))
+        _mockCityRepository.Setup(x => x.CityNameExistsAsync(It.IsAny<string>(), CancellationToken.None))
             .ReturnsAsync(false);
-        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1))
+        _mockCountryRepository.Setup(x => x.GetCountryByIdAsync(1, CancellationToken.None))
             .ReturnsAsync(new Country { Id = 1, Name = "Test Country" });
 
         var dto = new AddCityDto { Name = "Test City", Population = 10000000001, CountryId = 1 };

@@ -4,6 +4,6 @@ namespace AP.CityDataDemo.Application.Interfaces
     {
         public ICityRepository CitiesRepository { get; }
         public ICountryRepository CountriesRepository { get; }
-        public Task Commit();
+        public Task Commit(CancellationToken cancellationToken = default);
     }
 }

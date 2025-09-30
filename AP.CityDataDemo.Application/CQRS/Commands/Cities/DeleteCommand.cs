@@ -29,13 +29,13 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
 
         public async Task<bool> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
-            var deleted = await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id);
+            var deleted = await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id, cancellationToken);
             if (!deleted)
             {
                 // either return false and let controller translate, or:
                 throw new NotFoundException($"City {request.Id} not found");
             }
-            await _unitOfWork.Commit();
+            await _unitOfWork.Commit(cancellationToken);
             return true;
         }
     }
@@ -54,7 +54,7 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
 
         private async Task<bool> NotLastCity(int cityId, CancellationToken cancellationToken)
         {
-            var count = await _unitOfWork.CitiesRepository.GetCountAsync();
+            var count = await _unitOfWork.CitiesRepository.GetCountAsync(cancellationToken);
             return count > 1;
         }
     }

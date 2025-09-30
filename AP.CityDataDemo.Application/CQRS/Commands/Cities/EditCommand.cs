@@ -34,7 +34,7 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
                 .MaximumLength(100).WithMessage("City name must not exceed 100 characters.")
                 .MustAsync(async (command, name, cancellation) =>
                 {
-                    var city = await unitOfWork.CitiesRepository.GetByIdAsync(command.Id);
+                    var city = await unitOfWork.CitiesRepository.GetByIdAsync(command.Id, cancellation);
                     return city == null || city.Name == name;
                 })
                 .WithMessage("City name cannot be changed.");
@@ -58,7 +58,7 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
 
         public async Task<City> Handle(EditCityCommand request, CancellationToken cancellationToken)
         {
-            var city = await unitOfWork.CitiesRepository.GetByIdAsync(request.Id);
+            var city = await unitOfWork.CitiesRepository.GetByIdAsync(request.Id, cancellationToken);
             if (city == null)
             {
                 return null;
@@ -68,8 +68,8 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
             city.Population = request.Population;
             city.CountryId = request.CountryId;
 
-            await unitOfWork.CitiesRepository.UpdateAsync(city);
-            await unitOfWork.Commit();
+            await unitOfWork.CitiesRepository.UpdateAsync(city, cancellationToken);
+            await unitOfWork.Commit(cancellationToken);
 
             return city;
         }
