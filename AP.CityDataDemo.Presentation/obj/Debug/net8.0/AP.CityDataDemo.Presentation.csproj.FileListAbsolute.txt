@@ -256,3 +256,5 @@
 /Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/AP.CityD.B48EECDD.Up2Date
 /Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/AP.CityDataDemo.Presentation.genruntimeconfig.cache
 /Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/obj/Debug/net8.0/ref/AP.CityDataDemo.Presentation.dll
+/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/bin/Debug/net8.0/DotNetEnv.dll
+/Users/koenv/Documents/Repositories/CityDataDemo/AP.CityDataDemo.Presentation/bin/Debug/net8.0/Sprache.dll

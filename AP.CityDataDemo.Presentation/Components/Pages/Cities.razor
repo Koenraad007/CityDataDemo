@@ -4,8 +4,8 @@
 @using AP.CityDataDemo.Application.CQRS.Queries.Countries
 @using AP.CityDataDemo.Application.DTOs
 @using AP.CityDataDemo.Application.Exceptions
+@using AP.CityDataDemo.Application.Services
 @using AP.CityDataDemo.Domain
-@using AP.MyGameStore.Application.CQRS.Queries.Cities
 @using FluentValidation
 @using MediatR
 @inject IMediator Mediator
@@ -76,8 +76,11 @@ else
                     <td>@city.CountryName</td>
                     <td>@city.Population.ToString("N0")</td>
                     <td>
-                        <button class="btn btn-sm btn-warning" @onclick="() => ShowEditPopup(city)">
+                        <button class="btn btn-sm btn-warning me-2" @onclick="() => ShowEditPopup(city)">
                             Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteCity(city.Id)">
+                            Delete
                         </button>
                     </td>
                 </tr>
@@ -140,21 +143,19 @@ else
 }
 
 @code {
-    public IEnumerable<CityDto> CitiesList { get; set; } = new List<CityDto>();
     public IEnumerable<Country> CountriesList { get; set; } = new List<Country>();
     public List<string> ValidationErrors { get; set; } = new();
     private IEnumerable<CityDto>? cities;
     private string? errorMessage;
     private bool showAddForm = false;
+    private EmailService emailService = new EmailService();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             cities = await Mediator.Send(new GetAllCitiesQuery());
-            CitiesList = null;
             StateHasChanged();
-            CitiesList = await Mediator.Send(new GetAllCitiesQuery());
             CountriesList = await Mediator.Send(new GetAllCountriesQuery());
         }
         catch (Exception)
@@ -238,11 +239,41 @@ else
                 await Mediator.Send(command);
                 IsEditPopupVisible = false;
                 SelectedCity = null;
-                CitiesList = await Mediator.Send(new GetAllCitiesQuery());
+                cities = await Mediator.Send(new GetAllCitiesQuery());
             }
             catch (FluentValidation.ValidationException ex)
             {
                 ValidationErrors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+            }
+        }
+    }
+
+    public async Task DeleteCity(int cityId)
+    {
+        if (cityId != 0)
+        {
+            var city = cities?.FirstOrDefault(c => c.Id == cityId);
+            var command = new DeleteCommand(cityId);
+            try
+            {
+                await Mediator.Send(command);
+                cities = await Mediator.Send(new GetAllCitiesQuery());
+
+                // Send email notification
+                await emailService.SendEmailAsync("koenvanaken1999@gmail.com",
+                    "City Deleted",
+                    $"The city with name {city!.Name} has been deleted.");
+            }
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(FluentValidation.ValidationException))
+                {
+                    var ex = (FluentValidation.ValidationException)e;
+                    errorMessage = string.Join("; ", ex.Errors.Select(err => err.ErrorMessage));
+                    return;
+                }
+
+                errorMessage = "Sorry, we could not delete the city at this time.";
             }
         }
     }

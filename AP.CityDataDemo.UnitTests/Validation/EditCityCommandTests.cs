@@ -10,13 +10,13 @@ namespace AP.CityDataDemo.UnitTests.Validation
     public class EditCityCommandTests
     {
         private Mock<IUnitOfWork> _mockUow;
-        private Mock<ICitiesRepository> _mockRepo;
+        private Mock<ICityRepository> _mockRepo;
 
         [TestInitialize]
         public void Setup()
         {
             _mockUow = new Mock<IUnitOfWork>();
-            _mockRepo = new Mock<ICitiesRepository>();
+            _mockRepo = new Mock<ICityRepository>();
             _mockUow.Setup(u => u.CitiesRepository).Returns(_mockRepo.Object);
         }
 
@@ -24,8 +24,8 @@ namespace AP.CityDataDemo.UnitTests.Validation
         public async Task Handler_UpdatesCity_WhenCityExists()
         {
             var city = new City { Id = 1, Name = "TestCity", Population = 500, CountryId = 1 };
-            _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(city);
-            _mockUow.Setup(u => u.Commit()).Returns(Task.CompletedTask);
+            _mockRepo.Setup(r => r.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync(city);
+            _mockUow.Setup(u => u.Commit(CancellationToken.None)).Returns(Task.CompletedTask);
             var handler = new EditCityCommandHandler(_mockUow.Object);
             var command = new EditCityCommand(1, "TestCity", 1000, 2);
 
@@ -36,8 +36,8 @@ namespace AP.CityDataDemo.UnitTests.Validation
             Assert.AreEqual("TestCity", result.Name);
             Assert.AreEqual(1000, result.Population);
             Assert.AreEqual(2, result.CountryId);
-            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<City>()), Times.Once);
-            _mockUow.Verify(u => u.Commit(), Times.Once);
+            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<City>(), CancellationToken.None), Times.Once);
+            _mockUow.Verify(u => u.Commit(CancellationToken.None), Times.Once);
         }
 
         [TestMethod]
@@ -80,7 +80,7 @@ namespace AP.CityDataDemo.UnitTests.Validation
         public async Task Validator_Fails_WhenNameIsChanged()
         {
             var city = new City { Id = 1, Name = "OriginalName", Population = 100, CountryId = 1 };
-            _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(city);
+            _mockRepo.Setup(r => r.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync(city);
             var validator = new EditCityCommandValidator(_mockUow.Object);
             var command = new EditCityCommand(1, "ChangedName", 100, 1);
 
@@ -94,7 +94,7 @@ namespace AP.CityDataDemo.UnitTests.Validation
         public async Task Validator_Succeeds_WhenAllValid()
         {
             var city = new City { Id = 1, Name = "TestCity", Population = 100, CountryId = 1 };
-            _mockRepo.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(city);
+            _mockRepo.Setup(r => r.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync(city);
             var validator = new EditCityCommandValidator(_mockUow.Object);
             var command = new EditCityCommand(1, "TestCity", 200, 2);
 

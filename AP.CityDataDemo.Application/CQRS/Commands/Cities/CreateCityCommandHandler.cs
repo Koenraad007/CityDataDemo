@@ -31,10 +31,10 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
         await _validator.ValidateAndThrowAsync(request.AddCityDto, cancellationToken);
 
         var city = new City() { Name = request.AddCityDto.Name, Population = (int)request.AddCityDto.Population, CountryId = request.AddCityDto.CountryId };
-        await _cityRepository.AddCityAsync(city);
-        await _unitOfWork.Commit();
+        await _cityRepository.AddCityAsync(city, cancellationToken);
+        await _unitOfWork.Commit(cancellationToken);
 
-        var country = await _countryRepository.GetCountryByIdAsync(request.AddCityDto.CountryId);
+        var country = await _countryRepository.GetCountryByIdAsync(request.AddCityDto.CountryId, cancellationToken);
         var resultDto = city!.ToDto();
         resultDto.CountryName = country?.Name ?? "N/A";
         return resultDto;

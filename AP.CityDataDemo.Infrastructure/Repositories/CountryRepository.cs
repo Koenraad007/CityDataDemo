@@ -11,38 +11,38 @@ public class CountryRepository : GenericRepository<Country>, ICountryRepository
     {
     }
 
-    public Task<IEnumerable<Country>> GetAllCountriesAsync()
+    public Task<IEnumerable<Country>> GetAllCountriesAsync(CancellationToken cancellationToken = default)
     {
-        return GetAllAsync();
+        return GetAllAsync(cancellationToken);
     }
 
-    public Task<Country?> GetCountryByIdAsync(int id)
+    public Task<Country?> GetCountryByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return GetByIdAsync(id);
+        return GetByIdAsync(id, cancellationToken);
     }
 
-    public Task AddCountryAsync(Country country)
+    public Task AddCountryAsync(Country country, CancellationToken cancellationToken = default)
     {
-        return AddAsync(country);
+        return AddAsync(country, cancellationToken);
     }
 
-    public Task AddCountriesAsync(IEnumerable<Country> countries)
+    public Task AddCountriesAsync(IEnumerable<Country> countries, CancellationToken cancellationToken = default)
     {
-        return AddRangeAsync(countries);
+        return AddRangeAsync(countries, cancellationToken);
     }
 
-    public Task<bool> UpdateCountryAsync(Country country)
+    public Task UpdateCountryAsync(Country country, CancellationToken cancellationToken = default)
     {
-        return UpdateAsync(country);
+        return UpdateAsync(country, cancellationToken);
     }
 
-    public Task DeleteCountryAsync(Country country)
+    public Task DeleteCountryAsync(Country country, CancellationToken cancellationToken = default)
     {
-        return DeleteAsync(country);
+        return DeleteAsync(country, cancellationToken);
     }
 
-    public Task<bool> DeleteCountryByIdAsync(int id)
+    public Task<bool> DeleteCountryByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return DeleteByIdAsync(id);
+        return DeleteByIdAsync(id, cancellationToken);
     }
 }
