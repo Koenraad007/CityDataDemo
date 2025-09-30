@@ -6,7 +6,7 @@ AP.CityDataDemo.Application/bin
 AP.CityDataDemo.Application/obj
 AP.CityDataDemo.Domain/bin
 AP.CityDataDemo.Domain/obj
-AP.CityDataDemo.Tests/bin
-AP.CityDataDemo.Tests/obj
+AP.CityDataDemo.UnitTests/bin
+AP.CityDataDemo.UnitTests/obj
 .DS_Store
 .vscode
