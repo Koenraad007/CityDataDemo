@@ -1,9 +1,9 @@
-namespace AP.CityDataDemo.Application.Interfaces;
-
-public interface IUnitOfWork : IDisposable
+namespace AP.CityDataDemo.Application.Interfaces
 {
-    Task<int> SaveChangesAsync();
-    Task BeginTransactionAsync();
-    Task CommitTransactionAsync();
-    Task RollbackTransactionAsync();
+    public interface IUnitOfWork
+    {
+        public ICityRepository CitiesRepository { get; }
+        public ICountryRepository CountriesRepository { get; }
+        Task Commit();
+    }
 }

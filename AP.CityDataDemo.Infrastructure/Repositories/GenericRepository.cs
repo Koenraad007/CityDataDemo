@@ -1,91 +1,66 @@
 using System.Linq.Expressions;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Domain.Common;
-using AP.CityDataDemo.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
-namespace AP.CityDataDemo.Infrastructure.Repositories;
-
-public class GenericRepository<T> : IGenericRepository<T> where T : class, IEntity
+namespace AP.CityDataDemo.Infrastructure.Repositories
 {
-    protected readonly IInMemoryDataStore _dataStore;
-    protected readonly List<T> _collection;
-
-    public GenericRepository(IInMemoryDataStore dataStore)
+    public abstract class GenericRepository<T> : IGenericRepository<T> where T : class
     {
-        _dataStore = dataStore;
-        _collection = GetCollection();
-    }
+        private readonly DbContext _context;
+        protected readonly DbSet<T> _dbSet;
 
-    protected virtual List<T> GetCollection()
-    {
-        if (typeof(T).Name == "City")
+        public GenericRepository(DbContext context)
         {
-            return (List<T>)(object)_dataStore.Cities;
+            _context = context;
+            _dbSet = _context.Set<T>();
         }
-        if (typeof(T).Name == "Country")
+
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-            return (List<T>)(object)_dataStore.Countries;
+            return await _dbSet.ToListAsync();
         }
-        throw new InvalidOperationException($"No collection configured for type {typeof(T).Name}");
-    }
 
-    public virtual Task<IEnumerable<T>> GetAllAsync()
-    {
-        return Task.FromResult<IEnumerable<T>>(_collection);
-    }
-
-    public virtual Task<T?> GetByIdAsync(int id)
-    {
-        var entity = _collection.FirstOrDefault(e => e.Id == id);
-        return Task.FromResult(entity);
-    }
-
-    public virtual Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
-    {
-        var result = _collection.AsQueryable().Where(predicate);
-        return Task.FromResult<IEnumerable<T>>(result);
-    }
-
-    public virtual Task AddAsync(T entity)
-    {
-        _collection.Add(entity);
-        return Task.CompletedTask;
-    }
-
-    public virtual Task AddRangeAsync(IEnumerable<T> entities)
-    {
-        _collection.AddRange(entities);
-        return Task.CompletedTask;
-    }
-
-    public virtual Task<bool> UpdateAsync(T entity)
-    {
-        var existingEntity = _collection.FirstOrDefault(e => e.Id == entity.Id);
-        
-        if (existingEntity != null)
+        public async Task<T?> GetByIdAsync(int id)
         {
-            var index = _collection.IndexOf(existingEntity);
-            _collection[index] = entity;
-            return Task.FromResult(true);
+            return await _dbSet.FindAsync(id);
         }
-        return Task.FromResult(false);
-    }
 
-    public virtual Task DeleteAsync(T entity)
-    {
-        _collection.Remove(entity);
-        return Task.CompletedTask;
-    }
-
-    public virtual Task<bool> DeleteByIdAsync(int id)
-    {
-        var entity = _collection.FirstOrDefault(e => e.Id == id);
-        
-        if (entity != null)
+        public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
-            _collection.Remove(entity);
-            return Task.FromResult(true);
+            return await _dbSet.Where(predicate).ToListAsync();
         }
-        return Task.FromResult(false);
+
+        public async Task AddAsync(T entity)
+        {
+            await _dbSet.AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddRangeAsync(IEnumerable<T> entities)
+        {
+            await _dbSet.AddRangeAsync(entities);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> UpdateAsync(T entity)
+        {
+            _dbSet.Update(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task DeleteAsync(T entity)
+        {
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> DeleteByIdAsync(int id)
+        {
+            var entity = await _dbSet.FindAsync(id);
+            if (entity == null)
+                return false;
+            _dbSet.Remove(entity);
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

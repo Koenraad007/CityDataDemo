@@ -1,36 +1,28 @@
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Infrastructure.Data;
+using AP.CityDataDemo.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace AP.CityDataDemo.Infrastructure.Repositories;
 
 public class CityRepository : GenericRepository<City>, ICityRepository
 {
-    private new readonly IInMemoryDataStore _dataStore;
-    
-    public CityRepository(IInMemoryDataStore dataStore) : base(dataStore)
+    public CityRepository(CityDataDemoContext ctx) : base(ctx)
     {
-        _dataStore = dataStore;
     }
 
-    public Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
+    public async Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
     {
-        var cities = _collection.AsEnumerable();
-        
+        IQueryable<City> query = _dbSet;
         if (sortByName)
         {
-            cities = descending 
-                ? cities.OrderByDescending(c => c.Name)
-                : cities.OrderBy(c => c.Name);
+            query = descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
         }
         else
         {
-            cities = descending 
-                ? cities.OrderByDescending(c => c.Population)
-                : cities.OrderBy(c => c.Population);
+            query = descending ? query.OrderByDescending(c => c.Population) : query.OrderBy(c => c.Population);
         }
-        
-        return Task.FromResult(cities);
+        return await query.ToListAsync();
     }
 
     public Task<City?> GetCityByIdAsync(int id)
@@ -40,19 +32,12 @@ public class CityRepository : GenericRepository<City>, ICityRepository
 
     public Task AddCityAsync(City city)
     {
-        if (city.Id == 0)
-        {
-            city.Id = _dataStore.GetNextCityId();
-        }
         return AddAsync(city);
     }
 
-    public async Task AddCitiesAsync(IEnumerable<City> cities)
+    public Task AddCitiesAsync(IEnumerable<City> cities)
     {
-        foreach (var city in cities)
-        {
-            await AddCityAsync(city);
-        }
+        return AddRangeAsync(cities);
     }
 
     public Task<bool> UpdateCityAsync(City city)
@@ -70,9 +55,9 @@ public class CityRepository : GenericRepository<City>, ICityRepository
         return DeleteByIdAsync(id);
     }
 
-    public Task<bool> CityNameExistsAsync(string name)
+    public async Task<bool> CityNameExistsAsync(string name)
     {
-        var exists = _collection.Any(c => c.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        return Task.FromResult(exists);
+        return await _dbSet.AnyAsync(c => c.Name.ToLower() == name.ToLower());
     }
+
 }

@@ -1,6 +1,6 @@
 using AP.CityDataDemo.Application.CQRS.Queries.Cities;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 using Moq;
 
 namespace AP.CityDataDemo.UnitTests.CQRS.Queries;
@@ -17,7 +17,7 @@ public class GetAllCitiesQueryHandlerTests
     {
         _mockCityRepository = new Mock<ICityRepository>();
         _mockCountryRepository = new Mock<ICountryRepository>();
-        
+
         _handler = new GetAllCitiesQueryHandler(
             _mockCityRepository.Object,
             _mockCountryRepository.Object);
@@ -46,7 +46,7 @@ public class GetAllCitiesQueryHandlerTests
 
         Assert.AreEqual(2, result.Count());
         Assert.IsTrue(result.All(c => c.CountryName == "USA"));
-        
+
         _mockCityRepository.Verify(x => x.GetAllAsync(true, false), Times.Once);
         _mockCountryRepository.Verify(x => x.GetAllCountriesAsync(), Times.Once);
     }

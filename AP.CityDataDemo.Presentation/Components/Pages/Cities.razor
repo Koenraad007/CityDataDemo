@@ -1,7 +1,11 @@
 @page "/cities"
-@using AP.CityDataDemo.Application.DTOs
+@using AP.CityDataDemo.Application.CQRS.Commands.Cities
 @using AP.CityDataDemo.Application.CQRS.Queries.Cities
+@using AP.CityDataDemo.Application.CQRS.Queries.Countries
+@using AP.CityDataDemo.Application.DTOs
 @using AP.CityDataDemo.Application.Exceptions
+@using AP.CityDataDemo.Domain
+@using AP.MyGameStore.Application.CQRS.Queries.Cities
 @using FluentValidation
 @using MediatR
 @inject IMediator Mediator
@@ -61,6 +65,7 @@ else
                 <th>City</th>
                 <th>Country</th>
                 <th>Population</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -70,13 +75,74 @@ else
                     <td>@city.Name</td>
                     <td>@city.CountryName</td>
                     <td>@city.Population.ToString("N0")</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning" @onclick="() => ShowEditPopup(city)">
+                            Edit
+                        </button>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
+@* Modal for editing city *@
+@if (IsEditPopupVisible && SelectedCity != null)
+{
+    <div class="modal show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5);">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit City</h5>
+                    <button type="button" class="btn-close" @onclick="CloseEditPopup" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @* Show errors here *@
+                    @if (ValidationErrors.Any())
+                    {
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach (var error in ValidationErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input class="form-control" @bind="SelectedCity.Name" disabled />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Population</label>
+                        <input type="number" class="form-control" @bind="SelectedCity.Population" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <select class="form-select" @bind="SelectedCity.CountryId" required>
+                            @if (CountriesList != null)
+                            {
+                                foreach (var country in CountriesList)
+                                {
+                                    <option value="@country.Id">@country.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" @onclick="CloseEditPopup">Cancel</button>
+                    <button class="btn btn-primary" @onclick="SaveEdit">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
+    public IEnumerable<CityDto> CitiesList { get; set; } = new List<CityDto>();
+    public IEnumerable<Country> CountriesList { get; set; } = new List<Country>();
+    public List<string> ValidationErrors { get; set; } = new();
     private IEnumerable<CityDto>? cities;
     private string? errorMessage;
     private bool showAddForm = false;
@@ -86,6 +152,10 @@ else
         try
         {
             cities = await Mediator.Send(new GetAllCitiesQuery());
+            CitiesList = null;
+            StateHasChanged();
+            CitiesList = await Mediator.Send(new GetAllCitiesQuery());
+            CountriesList = await Mediator.Send(new GetAllCountriesQuery());
         }
         catch (Exception)
         {
@@ -127,6 +197,53 @@ else
         catch (Exception)
         {
             errorMessage = "Sorry, we could not load the city data at this time.";
+        }
+    }
+
+    public bool IsEditPopupVisible { get; set; } = false;
+
+    public City? SelectedCity { get; set; }
+    public void ShowEditPopup(CityDto city)
+    {
+        SelectedCity = new City
+        {
+            Id = city.Id,
+            Name = city.Name,
+            Population = (int)city.Population,
+            CountryId = city.CountryId != 0 ? city.CountryId : (CountriesList.FirstOrDefault()?.Id ?? 0),
+            Country = null
+        };
+        IsEditPopupVisible = true;
+    }
+
+    public void CloseEditPopup()
+    {
+        IsEditPopupVisible = false;
+        SelectedCity = null;
+    }
+
+    public async Task SaveEdit()
+    {
+        ValidationErrors.Clear();
+        if (SelectedCity != null && SelectedCity.CountryId != 0)
+        {
+            var command = new EditCityCommand(
+                SelectedCity.Id,
+                SelectedCity.Name,
+                SelectedCity.Population,
+                SelectedCity.CountryId
+            );
+            try
+            {
+                await Mediator.Send(command);
+                IsEditPopupVisible = false;
+                SelectedCity = null;
+                CitiesList = await Mediator.Send(new GetAllCitiesQuery());
+            }
+            catch (FluentValidation.ValidationException ex)
+            {
+                ValidationErrors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 using AP.CityDataDemo.Application.DTOs;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Application.Validation;
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 using FluentValidation.TestHelper;
 using Moq;
 
@@ -32,7 +32,7 @@ public class AddCityDtoValidatorTests
 
         var dto = new AddCityDto { Name = "Test City", Population = 10000000001, CountryId = 1 };
         var result = await _validator.TestValidateAsync(dto);
-        
+
         result.ShouldHaveValidationErrorFor(x => x.Population)
             .WithErrorMessage("Population cannot be greater than 10,000,000,000");
     }

@@ -1,16 +1,14 @@
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Infrastructure.Data;
+using AP.CityDataDemo.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace AP.CityDataDemo.Infrastructure.Repositories;
 
 public class CountryRepository : GenericRepository<Country>, ICountryRepository
 {
-    private new readonly IInMemoryDataStore _dataStore;
-    
-    public CountryRepository(IInMemoryDataStore dataStore) : base(dataStore)
+    public CountryRepository(CityDataDemoContext cityDataDemoContext) : base(cityDataDemoContext)
     {
-        _dataStore = dataStore;
     }
 
     public Task<IEnumerable<Country>> GetAllCountriesAsync()
@@ -25,19 +23,12 @@ public class CountryRepository : GenericRepository<Country>, ICountryRepository
 
     public Task AddCountryAsync(Country country)
     {
-        if (country.Id == 0)
-        {
-            country.Id = _dataStore.GetNextCountryId();
-        }
         return AddAsync(country);
     }
 
-    public async Task AddCountriesAsync(IEnumerable<Country> countries)
+    public Task AddCountriesAsync(IEnumerable<Country> countries)
     {
-        foreach (var country in countries)
-        {
-            await AddCountryAsync(country);
-        }
+        return AddRangeAsync(countries);
     }
 
     public Task<bool> UpdateCountryAsync(Country country)

@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 
 namespace AP.CityDataDemo.Application.Interfaces;
 

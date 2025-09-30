@@ -2,8 +2,8 @@ using MediatR;
 using AP.CityDataDemo.Application.DTOs;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Application.Mappings;
-using AP.CityDataDemo.Domain.Entities;
 using FluentValidation;
+using AP.CityDataDemo.Domain;
 
 namespace AP.CityDataDemo.Application.CQRS.Commands.Cities;
 
@@ -30,12 +30,12 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
     {
         await _validator.ValidateAndThrowAsync(request.AddCityDto, cancellationToken);
 
-        var city = new City(request.AddCityDto.Name, request.AddCityDto.Population, request.AddCityDto.CountryId);
+        var city = new City() { Name = request.AddCityDto.Name, Population = (int)request.AddCityDto.Population, CountryId = request.AddCityDto.CountryId };
         await _cityRepository.AddCityAsync(city);
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.Commit();
 
         var country = await _countryRepository.GetCountryByIdAsync(request.AddCityDto.CountryId);
-        var resultDto = city.ToDto();
+        var resultDto = city!.ToDto();
         resultDto.CountryName = country?.Name ?? "N/A";
         return resultDto;
     }

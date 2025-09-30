@@ -3,7 +3,7 @@ using AP.CityDataDemo.Application.DTOs;
 using AP.CityDataDemo.Application.Exceptions;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Application.Validation;
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 using FluentValidation;
 using Moq;
 
@@ -25,7 +25,7 @@ public class CreateCityCommandHandlerTests
         _mockCountryRepository = new Mock<ICountryRepository>();
         _mockUnitOfWork = new Mock<IUnitOfWork>();
         _validator = new AddCityDtoValidator(_mockCityRepository.Object, _mockCountryRepository.Object);
-        
+
         _handler = new CreateCityCommandHandler(
             _mockCityRepository.Object,
             _mockCountryRepository.Object,

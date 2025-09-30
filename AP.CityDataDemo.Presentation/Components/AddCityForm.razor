@@ -3,6 +3,7 @@
 @using AP.CityDataDemo.Application.CQRS.Commands.Cities
 @using AP.CityDataDemo.Application.Exceptions
 @using System.ComponentModel.DataAnnotations
+@using AP.CityDataDemo.Domain
 @using FluentValidation
 @using MediatR
 @inject IMediator Mediator
@@ -74,7 +75,7 @@
     [Parameter] public EventCallback OnCityAdded { get; set; }
     
     private AddCityDto addCityDto = new();
-    private IEnumerable<CountryDto>? countries;
+    private IEnumerable<Country>? countries;
     private string? errorMessage;
     private string? successMessage;
     private bool isSubmitting = false;

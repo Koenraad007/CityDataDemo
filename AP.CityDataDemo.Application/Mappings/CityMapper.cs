@@ -1,5 +1,5 @@
 using AP.CityDataDemo.Application.DTOs;
-using AP.CityDataDemo.Domain.Entities;
+using AP.CityDataDemo.Domain;
 
 namespace AP.CityDataDemo.Application.Mappings;
 
@@ -19,6 +19,6 @@ public static class CityMapper
 
     public static City ToEntity(this CityDto dto)
     {
-        return new City(dto.Name, dto.Population, dto.CountryId);
+        return new City() { Name = dto.Name, Population = (int)dto.Population, CountryId = dto.CountryId };
     }
 }
