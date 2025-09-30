@@ -19,7 +19,7 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
 
         public async Task<IEnumerable<City>> GetAllAsync(bool sortByName, bool descending)
         {
-            IQueryable<City> query = _dbSet;
+            IQueryable<City> query = _dbSet.AsNoTracking();
             if (sortByName)
             {
                 query = descending ? query.OrderByDescending(c => c.Name) : query.OrderBy(c => c.Name);
