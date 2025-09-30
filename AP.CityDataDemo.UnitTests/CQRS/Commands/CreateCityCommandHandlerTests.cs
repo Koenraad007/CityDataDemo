@@ -4,6 +4,7 @@ using AP.CityDataDemo.Application.Exceptions;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Application.Validation;
 using AP.CityDataDemo.Domain;
+using AP.CityDataDemo.Infrastructure.UOW;
 using FluentValidation;
 using Moq;
 
@@ -14,7 +15,7 @@ public class CreateCityCommandHandlerTests
 {
     private Mock<ICityRepository> _mockCityRepository = null!;
     private Mock<ICountryRepository> _mockCountryRepository = null!;
-    private Mock<IUnitOfWork> _mockUnitOfWork = null!;
+    private Mock<UnitOfWork> _mockUnitOfWork = null!;
     private AddCityDtoValidator _validator = null!;
     private CreateCityCommandHandler _handler = null!;
 
@@ -23,7 +24,7 @@ public class CreateCityCommandHandlerTests
     {
         _mockCityRepository = new Mock<ICityRepository>();
         _mockCountryRepository = new Mock<ICountryRepository>();
-        _mockUnitOfWork = new Mock<IUnitOfWork>();
+        _mockUnitOfWork = new Mock<UnitOfWork>();
         _validator = new AddCityDtoValidator(_mockCityRepository.Object, _mockCountryRepository.Object);
 
         _handler = new CreateCityCommandHandler(
@@ -46,9 +47,7 @@ public class CreateCityCommandHandlerTests
             .ReturnsAsync(false);
         _mockCityRepository.Setup(x => x.AddCityAsync(It.IsAny<City>()))
             .Returns(Task.CompletedTask);
-        _mockUnitOfWork.Setup(x => x.SaveChangesAsync())
-            .ReturnsAsync(1);
-
+        
         var result = await _handler.Handle(command, CancellationToken.None);
 
         Assert.AreEqual(validDto.Name, result.Name);
@@ -57,7 +56,7 @@ public class CreateCityCommandHandlerTests
         Assert.AreEqual(country.Name, result.CountryName);
 
         _mockCityRepository.Verify(x => x.AddCityAsync(It.IsAny<City>()), Times.Once);
-        _mockUnitOfWork.Verify(x => x.SaveChangesAsync(), Times.Once);
+        _mockUnitOfWork.Verify(x => x.Commit(), Times.Once);
     }
 
     [TestMethod]

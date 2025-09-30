@@ -1,6 +1,6 @@
-using AP.CityDataDemo.Application.CQRS.Queries.Cities;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Domain;
+using AP.CityDataDemo.Application.CQRS.Queries.Cities;
 using Moq;
 
 namespace AP.CityDataDemo.UnitTests.CQRS.Queries;
@@ -8,19 +8,16 @@ namespace AP.CityDataDemo.UnitTests.CQRS.Queries;
 [TestClass]
 public class GetAllCitiesQueryHandlerTests
 {
-    private Mock<ICityRepository> _mockCityRepository = null!;
-    private Mock<ICountryRepository> _mockCountryRepository = null!;
+    private Mock<IUnitOfWork> _mockUnitOfWork = null!;
     private GetAllCitiesQueryHandler _handler = null!;
 
     [TestInitialize]
     public void Setup()
     {
-        _mockCityRepository = new Mock<ICityRepository>();
-        _mockCountryRepository = new Mock<ICountryRepository>();
+        _mockUnitOfWork = new Mock<IUnitOfWork>();
 
         _handler = new GetAllCitiesQueryHandler(
-            _mockCityRepository.Object,
-            _mockCountryRepository.Object);
+            _mockUnitOfWork.Object);
     }
 
     [TestMethod]
@@ -28,17 +25,17 @@ public class GetAllCitiesQueryHandlerTests
     {
         var cities = new List<City>
         {
-            new("New York", 8000000, 1) { Id = 1 },
-            new("Los Angeles", 4000000, 1) { Id = 2 }
+            new() {Name ="New York", Population = 8000000, CountryId = 1, Id = 1 },
+            new() {Name ="Los Angeles", Population = 4000000, CountryId = 1, Id = 2 }
         };
         var countries = new List<Country>
         {
             new() { Id = 1, Name = "USA" }
         };
 
-        _mockCityRepository.Setup(x => x.GetAllAsync(true, false))
+        _mockUnitOfWork.Setup(x => x.CitiesRepository.GetAllAsync(true, false))
             .ReturnsAsync(cities);
-        _mockCountryRepository.Setup(x => x.GetAllCountriesAsync())
+        _mockUnitOfWork.Setup(x => x.CountriesRepository.GetAllAsync())
             .ReturnsAsync(countries);
 
         var query = new GetAllCitiesQuery();
@@ -47,7 +44,7 @@ public class GetAllCitiesQueryHandlerTests
         Assert.AreEqual(2, result.Count());
         Assert.IsTrue(result.All(c => c.CountryName == "USA"));
 
-        _mockCityRepository.Verify(x => x.GetAllAsync(true, false), Times.Once);
-        _mockCountryRepository.Verify(x => x.GetAllCountriesAsync(), Times.Once);
+        _mockUnitOfWork.Verify(x => x.CitiesRepository.GetAllAsync(true, false), Times.Once);
+        _mockUnitOfWork.Verify(x => x.CountriesRepository.GetAllAsync(), Times.Once);
     }
 }

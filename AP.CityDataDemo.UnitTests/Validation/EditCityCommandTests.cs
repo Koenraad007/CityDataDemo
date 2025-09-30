@@ -10,13 +10,13 @@ namespace AP.CityDataDemo.UnitTests.Validation
     public class EditCityCommandTests
     {
         private Mock<IUnitOfWork> _mockUow;
-        private Mock<ICitiesRepository> _mockRepo;
+        private Mock<ICityRepository> _mockRepo;
 
         [TestInitialize]
         public void Setup()
         {
             _mockUow = new Mock<IUnitOfWork>();
-            _mockRepo = new Mock<ICitiesRepository>();
+            _mockRepo = new Mock<ICityRepository>();
             _mockUow.Setup(u => u.CitiesRepository).Returns(_mockRepo.Object);
         }
 

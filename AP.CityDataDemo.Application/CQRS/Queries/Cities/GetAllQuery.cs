@@ -3,7 +3,7 @@ using MediatR;
 using AP.CityDataDemo.Application.DTOs;
 using AP.CityDataDemo.Application.Mappings;
 
-namespace AP.MyGameStore.Application.CQRS.Queries.Cities
+namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 {
     public class GetAllCitiesQuery : IRequest<IEnumerable<CityDto>>
     { }
