@@ -58,7 +58,7 @@ else
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input class="form-control" @bind="SelectedCity.Name" disabled />
+                        <input class="form-control" @bind="SelectedCity.Name" />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Population</label>
@@ -66,8 +66,7 @@ else
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Country</label>
-                        <select class="form-select" @bind="SelectedCity.CountryId">
-                            <option value="">Select a country</option>
+                        <select class="form-select" @bind="SelectedCity.CountryId" required>
                             @if (CountriesList != null)
                             {
                                 foreach (var country in CountriesList)
@@ -112,7 +111,7 @@ else
             Id = city.Id,
             Name = city.Name,
             Population = city.Population,
-            CountryId = city.CountryId,
+            CountryId = city.CountryId != 0 ? city.CountryId : (CountriesList.FirstOrDefault()?.Id ?? 0),
             Country = city.Country
         };
         IsEditPopupVisible = true;
@@ -126,7 +125,7 @@ else
 
     public async Task SaveEdit()
     {
-        if (SelectedCity != null)
+        if (SelectedCity != null && SelectedCity.CountryId != 0)
         {
             // Send EditCityCommand via Mediator
             var command = new EditCityCommand(
