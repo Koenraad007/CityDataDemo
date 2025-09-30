@@ -45,7 +45,7 @@ else
     </table>
 }
 
-@* Modal for editing city (always outside the table/logic blocks) *@
+@* Modal for editing city *@
 @if (IsEditPopupVisible && SelectedCity != null)
 {
     <div class="modal show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5);">
@@ -56,9 +56,21 @@ else
                     <button type="button" class="btn-close" @onclick="CloseEditPopup" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    @* Show errors here *@
+                    @if (ValidationErrors.Any())
+                    {
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach (var error in ValidationErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
                     <div class="mb-3">
                         <label class="form-label">Name</label>
-                        <input class="form-control" @bind="SelectedCity.Name" />
+                        <input class="form-control" @bind="SelectedCity.Name" disabled />
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Population</label>
@@ -91,6 +103,7 @@ else
 @code {
     public IEnumerable<City> CitiesList = new List<City>();
     public IEnumerable<Country> CountriesList = new List<Country>();
+    public List<string> ValidationErrors { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,7 +118,6 @@ else
 
     public void ShowEditPopup(City city)
     {
-        // Create a copy to avoid editing the list directly until save
         SelectedCity = new City
         {
             Id = city.Id,
@@ -125,20 +137,26 @@ else
 
     public async Task SaveEdit()
     {
+        ValidationErrors.Clear();
         if (SelectedCity != null && SelectedCity.CountryId != 0)
         {
-            // Send EditCityCommand via Mediator
             var command = new EditCityCommand(
                 SelectedCity.Id,
                 SelectedCity.Name,
                 SelectedCity.Population,
                 SelectedCity.CountryId
             );
-            await Mediator.Send(command);
-            IsEditPopupVisible = false;
-            SelectedCity = null;
-            // Optionally refresh the list
-            CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
+            try
+            {
+                await Mediator.Send(command);
+                IsEditPopupVisible = false;
+                SelectedCity = null;
+                CitiesList = await Mediator.Send(new GetAllCitiesQuery { PageNr = 1, PageSize = 10 });
+            }
+            catch (FluentValidation.ValidationException ex)
+            {
+                ValidationErrors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+            }
         }
     }
 }
