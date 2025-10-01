@@ -57,13 +57,27 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                 schema: "Country",
                 table: "tblCountries",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { 1, "UK" });
+                values: new object[,]
+                {
+                    { 1, "Belgium" },
+                    { 2, "UK" },
+                    { 3, "France" },
+                    { 4, "Netherlands" },
+                    { 5, "Germany" }
+                });
 
             migrationBuilder.InsertData(
                 schema: "City",
                 table: "tblCities",
                 columns: new[] { "Id", "CountryId", "Name", "Population" },
-                values: new object[] { 1, 1, "London", 9800000 });
+                values: new object[,]
+                {
+                    { 1, 1, "Brussels", 1860000 },
+                    { 2, 2, "London", 8900000 },
+                    { 3, 3, "Paris", 2140000 },
+                    { 4, 4, "Amsterdam", 872000 },
+                    { 5, 5, "Berlin", 3769000 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_tblCities_CountryId",

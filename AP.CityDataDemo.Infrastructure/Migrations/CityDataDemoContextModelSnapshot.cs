@@ -45,8 +45,36 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                         {
                             Id = 1,
                             CountryId = 1,
+                            Name = "Brussels",
+                            Population = 1860000
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CountryId = 2,
                             Name = "London",
-                            Population = 9800000
+                            Population = 8900000
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CountryId = 3,
+                            Name = "Paris",
+                            Population = 2140000
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CountryId = 4,
+                            Name = "Amsterdam",
+                            Population = 872000
+                        },
+                        new
+                        {
+                            Id = 5,
+                            CountryId = 5,
+                            Name = "Berlin",
+                            Population = 3769000
                         });
                 });
 
@@ -70,7 +98,27 @@ namespace AP.CityDataDemo.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
+                            Name = "Belgium"
+                        },
+                        new
+                        {
+                            Id = 2,
                             Name = "UK"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "France"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Netherlands"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Germany"
                         });
                 });
 
