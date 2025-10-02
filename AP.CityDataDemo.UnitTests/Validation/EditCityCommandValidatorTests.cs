@@ -7,7 +7,7 @@ namespace AP.CityDataDemo.UnitTests.Validation
 {
 
     [TestClass]
-    public class EditCityCommandTests
+    public class EditCityCommandValidatorTests
     {
         private Mock<IUnitOfWork> _mockUow;
         private Mock<ICityRepository> _mockRepo;
@@ -18,26 +18,6 @@ namespace AP.CityDataDemo.UnitTests.Validation
             _mockUow = new Mock<IUnitOfWork>();
             _mockRepo = new Mock<ICityRepository>();
             _mockUow.Setup(u => u.CitiesRepository).Returns(_mockRepo.Object);
-        }
-
-        [TestMethod]
-        public async Task Handler_UpdatesCity_WhenCityExists()
-        {
-            var city = new City { Id = 1, Name = "TestCity", Population = 500, CountryId = 1 };
-            _mockRepo.Setup(r => r.GetByIdAsync(1, CancellationToken.None)).ReturnsAsync(city);
-            _mockUow.Setup(u => u.Commit(CancellationToken.None)).Returns(Task.CompletedTask);
-            var handler = new EditCityCommandHandler(_mockUow.Object);
-            var command = new EditCityCommand(1, "TestCity", 1000, 2);
-
-            var result = await handler.Handle(command, CancellationToken.None);
-
-            Assert.IsNotNull(result);
-            Assert.AreEqual(1, result.Id);
-            Assert.AreEqual("TestCity", result.Name);
-            Assert.AreEqual(1000, result.Population);
-            Assert.AreEqual(2, result.CountryId);
-            _mockRepo.Verify(r => r.UpdateAsync(It.IsAny<City>(), CancellationToken.None), Times.Once);
-            _mockUow.Verify(u => u.Commit(CancellationToken.None), Times.Once);
         }
 
         [TestMethod]
@@ -104,3 +84,4 @@ namespace AP.CityDataDemo.UnitTests.Validation
         }
     }
 }
+
