@@ -1,6 +1,6 @@
 using AP.CityDataDemo.Application.Extensions;
 using AP.CityDataDemo.Infrastructure.Extensions;
-using AP.CityDataDemo.Presentation.Components;
+using AP.CityDataDemo.BlazorApp.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
