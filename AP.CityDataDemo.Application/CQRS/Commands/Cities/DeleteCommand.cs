@@ -34,7 +34,7 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
             await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id, cancellationToken);
             await _unitOfWork.Commit(cancellationToken);
 
-            var city = await _unitOfWork.CitiesRepository.GetByIdAsync(request.Id, cancellationToken);
+            var city = await _unitOfWork.CitiesRepository.GetByIdAsync(request.Id, null, cancellationToken);
             if (city != null)
             {
                 throw new TransactionFailedException($"City with id {request.Id} could not be deleted.");

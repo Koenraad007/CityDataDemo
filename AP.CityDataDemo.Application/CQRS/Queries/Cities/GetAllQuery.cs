@@ -2,6 +2,7 @@ using AP.CityDataDemo.Application.Interfaces;
 using MediatR;
 using AP.CityDataDemo.Shared.DTO;
 using AutoMapper;
+using System.Linq.Expressions;
 
 namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 {
@@ -9,6 +10,8 @@ namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
     {
         public int PageNumber { get; set; } = 1;
         public int PageSize { get; set; } = 10;
+        public bool Ascending { get; set; } = true;
+        public string? OrderBy { get; set; } = "Name";
     }
     public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, IEnumerable<CityDto>>
     {
@@ -23,15 +26,26 @@ namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 
         public async Task<IEnumerable<CityDto>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
         {
-            var cities = await uow.CitiesRepository.GetAllAsync(request.PageNumber, request.PageSize, c => c.Name, true, cancellationToken);
-            var countries = await uow.CountriesRepository.GetAllAsync(request.PageNumber, request.PageSize, c => c.Name, true, cancellationToken);
-            var countryDict = countries.ToDictionary(c => c.Id, c => c.Name);
-            return cities.Select(city =>
+            var orderBy = string.IsNullOrWhiteSpace(request.OrderBy) ? "Name" : request.OrderBy;
+
+            Expression<Func<Domain.City, object>> orderByExpr = orderBy.ToLowerInvariant() switch
             {
-                var dto = _mapper.Map<CityDto>(city);
-                dto.CountryName = countryDict.TryGetValue(city.CountryId, out var name) ? name : "N/A";
-                return dto;
-            });
+                "name" => c => c.Name,
+                "population" => c => c.Population,
+                "country" => c => c.Country.Name,
+                _ => c => c.Name // fallback
+            };
+
+            var cities = await uow.CitiesRepository.GetAllAsync<object>(
+                request.PageNumber,
+                request.PageSize,
+                orderByExpr,
+                request.Ascending,
+                new[] { "Country" },
+                cancellationToken
+            );
+
+            return _mapper.Map<IEnumerable<CityDto>>(cities);
         }
     }
 

@@ -162,7 +162,7 @@ else
         try
         {
             // Call API with query parameters to request sorted data
-            var uri = $"http://localhost:5265/api/v1/city?sortBy=population&descending={descending}";
+            var uri = $"http://localhost:5265/api/v1/city?orderBy=population&asc={!descending}";
             cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
             errorMessage = null;
         }

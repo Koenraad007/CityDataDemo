@@ -34,6 +34,7 @@ namespace AP.CityDataDemo.Application.CQRS.Queries.Countries
                     request.PageSize,
                     c => c.Name,
                     true,
+                    null,
                     cancellationToken
                 )
             );

@@ -15,9 +15,9 @@ namespace AP.CityDataDemo.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCities([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<IActionResult> GetCities([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] string orderBy = "Name", [FromQuery] bool asc = true)
         {
-            var query = new GetAllCitiesQuery { PageNumber = pageNumber, PageSize = pageSize };
+            var query = new GetAllCitiesQuery { PageNumber = pageNumber, PageSize = pageSize, OrderBy = orderBy, Ascending = asc };
             var cities = await _mediator.Send(query);
             return Ok(cities);
         }

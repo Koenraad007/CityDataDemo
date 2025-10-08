@@ -18,9 +18,18 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
             int pageSz,
             Expression<Func<T, TKey>> orderBy,
             bool ascending = true,
+            string[]? includeProperties = null,
             CancellationToken cancellationToken = default)
         {
             IQueryable<T> query = _dbSet.AsNoTracking();
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
 
             query = ascending
             ? query.OrderBy(orderBy)
@@ -32,9 +41,19 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
             .ToListAsync(cancellationToken);
         }
 
-        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<T?> GetByIdAsync(int id, string[]? includeProperties = null, CancellationToken cancellationToken = default)
         {
-            return await _dbSet.FindAsync(new object[] { id }, cancellationToken);
+            IQueryable<T> query = _dbSet.AsNoTracking();
+
+            if (includeProperties != null)
+            {
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return await query.FirstOrDefaultAsync(e => EF.Property<int>(e, "Id") == id, cancellationToken);
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)

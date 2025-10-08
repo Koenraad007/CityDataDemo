@@ -66,7 +66,7 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
         await _cityRepository.AddAsync(city, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        var country = await _countryRepository.GetByIdAsync(request.AddCityDto.CountryId, cancellationToken);
+        var country = await _countryRepository.GetByIdAsync(request.AddCityDto.CountryId, null);
         var resultDto = _mapper.Map<CityDto>(city);
         resultDto.CountryName = country?.Name ?? "N/A";
         return resultDto;
