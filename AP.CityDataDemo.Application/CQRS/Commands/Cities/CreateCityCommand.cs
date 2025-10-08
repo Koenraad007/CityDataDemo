@@ -1,9 +1,9 @@
 using MediatR;
 using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Application.Mappings;
 using FluentValidation;
 using AP.CityDataDemo.Domain;
+using AutoMapper;
 
 namespace AP.CityDataDemo.Application.CQRS.Commands.Cities;
 
@@ -46,15 +46,18 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
     private readonly ICityRepository _cityRepository;
     private readonly ICountryRepository _countryRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
 
     public CreateCityCommandHandler(
         ICityRepository cityRepository,
         ICountryRepository countryRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IMapper mapper)
     {
         _cityRepository = cityRepository;
         _countryRepository = countryRepository;
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
 
     public async Task<CityDto> Handle(CreateCityCommand request, CancellationToken cancellationToken)
@@ -64,7 +67,7 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
         await _unitOfWork.Commit(cancellationToken);
 
         var country = await _countryRepository.GetCountryByIdAsync(request.AddCityDto.CountryId, cancellationToken);
-        var resultDto = city!.ToDto();
+        var resultDto = _mapper.Map<CityDto>(city);
         resultDto.CountryName = country?.Name ?? "N/A";
         return resultDto;
     }

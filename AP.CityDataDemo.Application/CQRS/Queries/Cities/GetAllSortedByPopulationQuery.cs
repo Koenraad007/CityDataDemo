@@ -1,6 +1,7 @@
 using MediatR;
 using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
+using AutoMapper;
 
 namespace AP.CityDataDemo.Application.CQRS.Queries.Cities;
 
@@ -9,10 +10,12 @@ public record GetCitiesSortedByPopulationQuery(bool Descending = false) : IReque
 public class GetCitiesSortedByPopulationQueryHandler : IRequestHandler<GetCitiesSortedByPopulationQuery, IEnumerable<CityDto>>
 {
     private readonly IUnitOfWork _uow;
+    private readonly IMapper _mapper;
 
-    public GetCitiesSortedByPopulationQueryHandler(IUnitOfWork uow)
+    public GetCitiesSortedByPopulationQueryHandler(IUnitOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<CityDto>> Handle(GetCitiesSortedByPopulationQuery request, CancellationToken cancellationToken)
@@ -23,7 +26,7 @@ public class GetCitiesSortedByPopulationQueryHandler : IRequestHandler<GetCities
 
         return cities.Select(c =>
         {
-            var dto = CityMapper.ToDto(c);
+            var dto = _mapper.Map<CityDto>(c);
             dto.CountryName = countryMap.TryGetValue(c.CountryId, out var countryName) ? countryName : "N/A";
             return dto;
         });

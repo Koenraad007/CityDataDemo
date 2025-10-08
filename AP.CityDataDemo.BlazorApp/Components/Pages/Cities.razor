@@ -1,15 +1,9 @@
 @page "/cities"
-@using AP.CityDataDemo.Application.CQRS.Commands.Cities
-@using AP.CityDataDemo.Application.CQRS.Queries.Cities
-@using AP.CityDataDemo.Application.CQRS.Queries.Countries
 @using AP.CityDataDemo.Shared.DTO
-@using AP.CityDataDemo.Application.Exceptions
-@using AP.CityDataDemo.Application.Services
-@using AP.CityDataDemo.Domain
-@using FluentValidation
-@using MediatR
-@inject IMediator Mediator
+@using System.Net.Http.Json
+
 @rendermode InteractiveServer
+@inject HttpClient Http
 
 <PageTitle>Cities</PageTitle>
 
@@ -143,20 +137,19 @@ else
 }
 
 @code {
-    public IEnumerable<Country> CountriesList { get; set; } = new List<Country>();
+    public IEnumerable<CountryDto> CountriesList { get; set; } = new List<CountryDto>();
     public List<string> ValidationErrors { get; set; } = new();
     private IEnumerable<CityDto>? cities;
     private string? errorMessage;
     private bool showAddForm = false;
-    private EmailService emailService = new EmailService();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            cities = await Mediator.Send(new GetAllCitiesQuery());
-            StateHasChanged();
-            CountriesList = await Mediator.Send(new GetAllCountriesQuery());
+            // Load cities and countries from API
+            cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/cities");
+            CountriesList = await Http.GetFromJsonAsync<List<CountryDto>>("http://localhost:5265/api/v1/countries") ?? new List<CountryDto>();
         }
         catch (Exception)
         {
@@ -168,7 +161,9 @@ else
     {
         try
         {
-            cities = await Mediator.Send(new GetCitiesSortedByPopulationQuery(descending));
+            // Call API with query parameters to request sorted data
+            var uri = $"http://localhost:5265/api/v1/cities?sortBy=population&descending={descending}";
+            cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
             errorMessage = null;
         }
         catch (Exception)
@@ -192,7 +187,7 @@ else
     {
         try
         {
-            cities = await Mediator.Send(new GetAllCitiesQuery());
+            cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/cities");
             errorMessage = null;
         }
         catch (Exception)
@@ -203,16 +198,16 @@ else
 
     public bool IsEditPopupVisible { get; set; } = false;
 
-    public City? SelectedCity { get; set; }
+    public CityDto? SelectedCity { get; set; }
     public void ShowEditPopup(CityDto city)
     {
-        SelectedCity = new City
+        SelectedCity = new CityDto
         {
             Id = city.Id,
             Name = city.Name,
-            Population = (int)city.Population,
+            Population = city.Population,
             CountryId = city.CountryId != 0 ? city.CountryId : (CountriesList.FirstOrDefault()?.Id ?? 0),
-            Country = null
+            CountryName = city.CountryName
         };
         IsEditPopupVisible = true;
     }
@@ -228,22 +223,53 @@ else
         ValidationErrors.Clear();
         if (SelectedCity != null && SelectedCity.CountryId != 0)
         {
-            var command = new EditCityCommand(
-                SelectedCity.Id,
-                SelectedCity.Name,
-                SelectedCity.Population,
-                SelectedCity.CountryId
-            );
+            var payload = new
+            {
+                Id = SelectedCity.Id,
+                Name = SelectedCity.Name,
+                Population = SelectedCity.Population,
+                CountryId = SelectedCity.CountryId
+            };
+
             try
             {
-                await Mediator.Send(command);
-                IsEditPopupVisible = false;
-                SelectedCity = null;
-                cities = await Mediator.Send(new GetAllCitiesQuery());
+                var response = await Http.PutAsJsonAsync($"http://localhost:5265/api/v1/cities/{SelectedCity.Id}", payload);
+                if (response.IsSuccessStatusCode)
+                {
+                    IsEditPopupVisible = false;
+                    SelectedCity = null;
+                    cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/cities");
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    // Try to parse validation errors returned by the API
+                    var content = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string[]>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (dict != null)
+                        {
+                            ValidationErrors = dict.SelectMany(kv => kv.Value).ToList();
+                        }
+                        else
+                        {
+                            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(content);
+                            ValidationErrors = list ?? new List<string> { content };
+                        }
+                    }
+                    catch
+                    {
+                        ValidationErrors = new List<string> { content };
+                    }
+                }
+                else
+                {
+                    errorMessage = "Sorry, we could not update the city at this time.";
+                }
             }
-            catch (FluentValidation.ValidationException ex)
+            catch (Exception)
             {
-                ValidationErrors = ex.Errors.Select(e => e.ErrorMessage).ToList();
+                errorMessage = "Sorry, we could not update the city at this time.";
             }
         }
     }
@@ -253,26 +279,41 @@ else
         if (cityId != 0)
         {
             var city = cities?.FirstOrDefault(c => c.Id == cityId);
-            var command = new DeleteCommand(cityId);
             try
             {
-                await Mediator.Send(command);
-                cities = await Mediator.Send(new GetAllCitiesQuery());
-
-                // Send email notification
-                await emailService.SendEmailAsync("koenvanaken1999@gmail.com",
-                    "City Deleted",
-                    $"The city with name {city!.Name} has been deleted.");
-            }
-            catch (Exception e)
-            {
-                if (e.GetType() == typeof(FluentValidation.ValidationException))
+                var response = await Http.DeleteAsync($"http://localhost:5265/api/v1/cities/{cityId}");
+                if (response.IsSuccessStatusCode)
                 {
-                    var ex = (FluentValidation.ValidationException)e;
-                    errorMessage = string.Join("; ", ex.Errors.Select(err => err.ErrorMessage));
-                    return;
+                    cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/cities");
                 }
-
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string[]>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (dict != null)
+                        {
+                            errorMessage = string.Join("; ", dict.SelectMany(kv => kv.Value));
+                        }
+                        else
+                        {
+                            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(content);
+                            errorMessage = list != null ? string.Join("; ", list) : content;
+                        }
+                    }
+                    catch
+                    {
+                        errorMessage = content;
+                    }
+                }
+                else
+                {
+                    errorMessage = "Sorry, we could not delete the city at this time.";
+                }
+            }
+            catch (Exception)
+            {
                 errorMessage = "Sorry, we could not delete the city at this time.";
             }
         }

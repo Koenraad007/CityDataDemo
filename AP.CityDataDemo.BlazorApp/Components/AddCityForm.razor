@@ -78,7 +78,7 @@
         try
         {
             var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5265") };
-            countries = await httpClient.GetFromJsonAsync<IEnumerable<CountryDto>>("/api/countries");
+            countries = await httpClient.GetFromJsonAsync<IEnumerable<CountryDto>>("/api/v1/countries");
         }
         catch (Exception)
         {
@@ -94,26 +94,21 @@
             errorMessage = null;
             successMessage = null;
 
-            var result = await Mediator.Send(new CreateCityCommand(addCityDto));
+            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5265") };
+            var response = await httpClient.PostAsJsonAsync("/api/v1/cities", addCityDto);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "Failed to add city. Please try again.";
+                return;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<CityDto>();
             
             successMessage = $"City '{result.Name}' has been successfully added!";
             ResetForm();
             
             await OnCityAdded.InvokeAsync();
-        }
-        catch (FluentValidation.ValidationException ex)
-        {
-            // Show the first validation error from FluentValidation
-            errorMessage = ex.Errors?.FirstOrDefault()?.ErrorMessage ?? ex.Message;
-        }
-        catch (ArgumentException ex)
-        {
-            // Domain guards (e.g. from City constructor)
-            errorMessage = ex.Message;
-        }
-        catch (NotFoundException ex)
-        {
-            errorMessage = ex.Message;
         }
         catch (Exception)
         {

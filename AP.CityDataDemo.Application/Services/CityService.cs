@@ -8,6 +8,7 @@ namespace AP.CityDataDemo.Application.Services
     public class CityService : ICityService
     {
         private readonly ICityRepository _cityRepository;
+        private readonly EmailService emailService = new EmailService();
         private readonly IMapper _mapper;
 
         public CityService(ICityRepository cityRepository, IMapper mapper)
@@ -55,6 +56,11 @@ namespace AP.CityDataDemo.Application.Services
                 return false;
             }
             await _cityRepository.DeleteAsync(existingCity);
+
+            await emailService.SendEmailAsync("koenvanaken1999@gmail.com",
+                    "City Deleted",
+                    $"The city with name {existingCity!.Name} has been deleted.");
+
             return true;
         }
 
