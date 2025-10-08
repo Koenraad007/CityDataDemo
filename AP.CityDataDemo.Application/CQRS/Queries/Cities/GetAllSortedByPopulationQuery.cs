@@ -21,7 +21,7 @@ public class GetCitiesSortedByPopulationQueryHandler : IRequestHandler<GetCities
     public async Task<IEnumerable<CityDto>> Handle(GetCitiesSortedByPopulationQuery request, CancellationToken cancellationToken)
     {
         var cities = await _uow.CitiesRepository.GetAllAsync(sortByName: false, descending: request.Descending);
-        var countries = await _uow.CountriesRepository.GetAllCountriesAsync();
+        var countries = await _uow.CountriesRepository.GetAllAsync();
         var countryMap = countries.ToDictionary(c => c.Id, c => c.Name);
 
         return cities.Select(c =>

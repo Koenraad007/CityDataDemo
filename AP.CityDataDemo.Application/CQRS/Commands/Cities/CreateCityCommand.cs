@@ -36,7 +36,7 @@ public class CreateCityCommandValidator : AbstractValidator<CreateCityCommand>
         RuleFor(x => x.AddCityDto.CountryId)
             .GreaterThan(0)
             .WithMessage("A country must be selected")
-            .MustAsync(async (countryId, cancellation) => await _countryRepository.GetCountryByIdAsync(countryId) != null)
+            .MustAsync(async (countryId, cancellation) => await _countryRepository.GetByIdAsync(countryId) != null)
             .WithMessage("The selected country does not exist");
     }
 }
@@ -63,10 +63,10 @@ public class CreateCityCommandHandler : IRequestHandler<CreateCityCommand, CityD
     public async Task<CityDto> Handle(CreateCityCommand request, CancellationToken cancellationToken)
     {
         var city = new City() { Name = request.AddCityDto.Name, Population = (int)request.AddCityDto.Population, CountryId = request.AddCityDto.CountryId };
-        await _cityRepository.AddCityAsync(city, cancellationToken);
+        await _cityRepository.AddAsync(city, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        var country = await _countryRepository.GetCountryByIdAsync(request.AddCityDto.CountryId, cancellationToken);
+        var country = await _countryRepository.GetByIdAsync(request.AddCityDto.CountryId, cancellationToken);
         var resultDto = _mapper.Map<CityDto>(city);
         resultDto.CountryName = country?.Name ?? "N/A";
         return resultDto;

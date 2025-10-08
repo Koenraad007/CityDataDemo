@@ -31,36 +31,6 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public Task<City?> GetCityByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return GetByIdAsync(id, cancellationToken);
-        }
-
-        public Task AddCityAsync(City city, CancellationToken cancellationToken = default)
-        {
-            return AddAsync(city, cancellationToken);
-        }
-
-        public Task AddCitiesAsync(IEnumerable<City> cities, CancellationToken cancellationToken = default)
-        {
-            return AddRangeAsync(cities, cancellationToken);
-        }
-
-        public Task UpdateCityAsync(City city, CancellationToken cancellationToken = default)
-        {
-            return UpdateAsync(city, cancellationToken);
-        }
-
-        public Task DeleteCityAsync(City city, CancellationToken cancellationToken = default)
-        {
-            return DeleteAsync(city, cancellationToken);
-        }
-
-        public Task<bool> DeleteCityByIdAsync(int id, CancellationToken cancellationToken = default)
-        {
-            return DeleteByIdAsync(id, cancellationToken);
-        }
-
         public async Task<bool> CityNameExistsAsync(string name, CancellationToken cancellationToken = default)
         {
             return await _dbSet.AsNoTracking().AnyAsync(c => c.Name == name, cancellationToken);

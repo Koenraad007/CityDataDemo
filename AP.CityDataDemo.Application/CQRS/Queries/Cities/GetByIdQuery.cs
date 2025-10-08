@@ -25,7 +25,7 @@ public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, CityDto
         if (city == null)
             return null;
 
-        var country = await _uow.CountriesRepository.GetCountryByIdAsync(city.CountryId);
+        var country = await _uow.CountriesRepository.GetByIdAsync(city.CountryId);
         var cityDto = _mapper.Map<CityDto>(city);
         cityDto.CountryName = country?.Name ?? "N/A";
         return cityDto;
