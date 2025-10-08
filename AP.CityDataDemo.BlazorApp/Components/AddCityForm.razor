@@ -77,8 +77,8 @@
     {
         try
         {
-            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5265") };
-            countries = await httpClient.GetFromJsonAsync<IEnumerable<CountryDto>>("/api/v1/countries");
+            var httpClient = new HttpClient();
+            countries = await httpClient.GetFromJsonAsync<IEnumerable<CountryDto>>("http://localhost:5265/api/v1/country");
         }
         catch (Exception)
         {
@@ -94,8 +94,8 @@
             errorMessage = null;
             successMessage = null;
 
-            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5265") };
-            var response = await httpClient.PostAsJsonAsync("/api/v1/cities", addCityDto);
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsJsonAsync("http://localhost:5265/api/v1/city", addCityDto);
 
             if (!response.IsSuccessStatusCode)
             {

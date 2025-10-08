@@ -16,4 +16,8 @@
     <ProjectReference Include="../AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

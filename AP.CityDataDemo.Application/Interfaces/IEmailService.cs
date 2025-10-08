@@ -1,4 +1,4 @@
-namespace AP.CityDataDemo.Application.Services
+namespace AP.CityDataDemo.Application.Interfaces
 {
     public interface IEmailService
     {

@@ -1,5 +1,7 @@
 using AP.CityDataDemo.Shared.DTO;
 
+namespace AP.CityDataDemo.Application.Interfaces;
+
 public interface ICityService
 {
     public Task<IEnumerable<CityDto>> GetCitiesAsync();

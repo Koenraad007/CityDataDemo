@@ -11,6 +11,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.RegisterApplication();
 builder.Services.RegisterInfrastructure();
 
+builder.Services.AddControllers();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
@@ -31,5 +33,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.MapControllers();
 
 app.Run();
