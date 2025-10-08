@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

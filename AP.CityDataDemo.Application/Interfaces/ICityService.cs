@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 
 public interface ICityService
 {

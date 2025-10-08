@@ -34,14 +34,14 @@ namespace AP.CityDataDemo.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCity([FromBody] Application.DTOs.CityDto city)
+        public async Task<IActionResult> CreateCity([FromBody] Shared.DTO.CityDto city)
         {
             var createdCity = await _cityService.CreateCityAsync(city);
             return CreatedAtAction(nameof(GetCity), new { cityId = createdCity.Id }, createdCity);
         }
 
         [HttpPut("{cityId}")]
-        public async Task<IActionResult> UpdateCity(int cityId, [FromBody] Application.DTOs.CityDto city)
+        public async Task<IActionResult> UpdateCity(int cityId, [FromBody] Shared.DTO.CityDto city)
         {
             var updated = await _cityService.UpdateCityAsync(cityId, city);
             if (!updated)

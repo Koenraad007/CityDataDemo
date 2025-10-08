@@ -1,7 +1,6 @@
 using AP.CityDataDemo.Application.Interfaces;
 using MediatR;
-using AP.CityDataDemo.Application.DTOs;
-using AP.CityDataDemo.Application.Mappings;
+using AP.CityDataDemo.Shared.DTO;
 
 namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 {

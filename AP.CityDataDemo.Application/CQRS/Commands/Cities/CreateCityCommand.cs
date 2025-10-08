@@ -1,5 +1,5 @@
 using MediatR;
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Application.Mappings;
 using FluentValidation;

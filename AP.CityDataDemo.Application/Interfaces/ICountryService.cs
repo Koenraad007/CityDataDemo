@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 
 namespace AP.CityDataDemo.Application.Interfaces
 {

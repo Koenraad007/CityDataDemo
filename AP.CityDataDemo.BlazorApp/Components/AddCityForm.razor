@@ -1,12 +1,5 @@
-@using AP.CityDataDemo.Application.DTOs
-@using AP.CityDataDemo.Application.CQRS.Queries.Countries
-@using AP.CityDataDemo.Application.CQRS.Commands.Cities
-@using AP.CityDataDemo.Application.Exceptions
 @using System.ComponentModel.DataAnnotations
-@using AP.CityDataDemo.Domain
-@using FluentValidation
-@using MediatR
-@inject IMediator Mediator
+@using AP.CityDataDemo.Shared.DTO
 
 <div class="card">
     <div class="card-header">
@@ -75,7 +68,7 @@
     [Parameter] public EventCallback OnCityAdded { get; set; }
     
     private AddCityDto addCityDto = new();
-    private IEnumerable<Country>? countries;
+    private IEnumerable<CountryDto>? countries;
     private string? errorMessage;
     private string? successMessage;
     private bool isSubmitting = false;
@@ -84,7 +77,8 @@
     {
         try
         {
-            countries = await Mediator.Send(new GetAllCountriesQuery());
+            var httpClient = new HttpClient { BaseAddress = new Uri("http://localhost:5265") };
+            countries = await httpClient.GetFromJsonAsync<IEnumerable<CountryDto>>("/api/countries");
         }
         catch (Exception)
         {

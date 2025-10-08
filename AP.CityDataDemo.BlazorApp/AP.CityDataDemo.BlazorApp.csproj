@@ -12,15 +12,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../AP.CityDataDemo.Application/AP.CityDataDemo.Application.csproj" />
-    <ProjectReference Include="../AP.CityDataDemo.Infrastructure/AP.CityDataDemo.Infrastructure.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../AP.CityDataDemo.Shared/AP.CityDataDemo.Shared.csproj" />
   </ItemGroup>
 
 </Project>

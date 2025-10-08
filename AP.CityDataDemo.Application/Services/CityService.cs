@@ -1,4 +1,4 @@
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
 using AP.CityDataDemo.Domain;
 using AutoMapper;

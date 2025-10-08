@@ -15,5 +15,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../AP.CityDataDemo.Domain/AP.CityDataDemo.Domain.csproj" />
+    <ProjectReference Include="../AP.CityDataDemo.Shared/AP.CityDataDemo.Shared.csproj" />
   </ItemGroup>
 </Project>
