@@ -15,14 +15,15 @@ namespace AP.CityDataDemo.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCities()
+        public async Task<IActionResult> GetCities([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var cities = await _mediator.Send(new GetAllCitiesQuery());
+            var query = new GetAllCitiesQuery { PageNumber = pageNumber, PageSize = pageSize };
+            var cities = await _mediator.Send(query);
             return Ok(cities);
         }
 
         [HttpGet("{cityId}")]
-        public async Task<IActionResult> GetCity(int cityId, bool includePointsOfInterest = false)
+        public async Task<IActionResult> GetCity(int cityId)
         {
             var city = await _mediator.Send(new GetCityByIdQuery(cityId));
             if (city == null)

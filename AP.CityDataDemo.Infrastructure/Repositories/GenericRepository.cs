@@ -13,9 +13,23 @@ namespace AP.CityDataDemo.Infrastructure.Repositories
             _dbSet = context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<T>> GetAllAsync<TKey>(
+            int pageNr,
+            int pageSz,
+            Expression<Func<T, TKey>> orderBy,
+            bool ascending = true,
+            CancellationToken cancellationToken = default)
         {
-            return await _dbSet.AsNoTracking().ToListAsync(cancellationToken);
+            IQueryable<T> query = _dbSet.AsNoTracking();
+
+            query = ascending
+            ? query.OrderBy(orderBy)
+            : query.OrderByDescending(orderBy);
+
+            return await query
+            .Skip((pageNr - 1) * pageSz)
+            .Take(pageSz)
+            .ToListAsync(cancellationToken);
         }
 
         public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)

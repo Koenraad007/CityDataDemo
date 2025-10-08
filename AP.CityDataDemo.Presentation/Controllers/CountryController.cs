@@ -14,9 +14,14 @@ namespace AP.CityDataDemo.Presentation.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetCountries()
+        public async Task<ActionResult> GetCountries([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            var countries = await _mediator.Send(new GetAllCountriesQuery());
+            var query = new GetAllCountriesQuery
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+            var countries = await _mediator.Send(query);
             return Ok(countries);
         }
     }

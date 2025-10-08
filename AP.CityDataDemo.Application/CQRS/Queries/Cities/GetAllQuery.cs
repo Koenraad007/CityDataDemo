@@ -6,7 +6,10 @@ using AutoMapper;
 namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 {
     public class GetAllCitiesQuery : IRequest<IEnumerable<CityDto>>
-    { }
+    {
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+    }
     public class GetAllCitiesQueryHandler : IRequestHandler<GetAllCitiesQuery, IEnumerable<CityDto>>
     {
         private readonly IUnitOfWork uow;
@@ -20,8 +23,8 @@ namespace AP.CityDataDemo.Application.CQRS.Queries.Cities
 
         public async Task<IEnumerable<CityDto>> Handle(GetAllCitiesQuery request, CancellationToken cancellationToken)
         {
-            var cities = await uow.CitiesRepository.GetAllAsync();
-            var countries = await uow.CountriesRepository.GetAllAsync();
+            var cities = await uow.CitiesRepository.GetAllAsync(request.PageNumber, request.PageSize, c => c.Name, true, cancellationToken);
+            var countries = await uow.CountriesRepository.GetAllAsync(request.PageNumber, request.PageSize, c => c.Name, true, cancellationToken);
             var countryDict = countries.ToDictionary(c => c.Id, c => c.Name);
             return cities.Select(city =>
             {
