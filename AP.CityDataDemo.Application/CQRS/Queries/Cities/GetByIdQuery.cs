@@ -21,13 +21,11 @@ public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, CityDto
 
     public async Task<CityDto?> Handle(GetCityByIdQuery request, CancellationToken cancellationToken)
     {
-        var city = await _uow.CitiesRepository.GetByIdAsync(request.Id);
+        var city = await _uow.CitiesRepository.GetByIdAsync(request.Id, new[] { "Country" }, cancellationToken);
         if (city == null)
             return null;
 
-        var country = await _uow.CountriesRepository.GetByIdAsync(city.CountryId);
         var cityDto = _mapper.Map<CityDto>(city);
-        cityDto.CountryName = country?.Name ?? "N/A";
         return cityDto;
     }
 }
