@@ -1,7 +1,7 @@
 using MediatR;
-using AP.CityDataDemo.Application.DTOs;
+using AP.CityDataDemo.Shared.DTO;
 using AP.CityDataDemo.Application.Interfaces;
-using AP.CityDataDemo.Application.Mappings;
+using AutoMapper;
 
 namespace AP.CityDataDemo.Application.CQRS.Queries.Cities;
 
@@ -10,21 +10,22 @@ public record GetCityByIdQuery(int Id) : IRequest<CityDto?>;
 public class GetCityByIdQueryHandler : IRequestHandler<GetCityByIdQuery, CityDto?>
 {
     private readonly IUnitOfWork _uow;
+    private readonly IMapper _mapper;
 
-    public GetCityByIdQueryHandler(IUnitOfWork uow)
+    public GetCityByIdQueryHandler(IUnitOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
+
     }
 
     public async Task<CityDto?> Handle(GetCityByIdQuery request, CancellationToken cancellationToken)
     {
-        var city = await _uow.CitiesRepository.GetByIdAsync(request.Id);
+        var city = await _uow.CitiesRepository.GetByIdAsync(request.Id, new[] { "Country" }, cancellationToken);
         if (city == null)
             return null;
 
-        var country = await _uow.CountriesRepository.GetCountryByIdAsync(city.CountryId);
-        var cityDto = CityMapper.ToDto(city);
-        cityDto.CountryName = country?.Name ?? "N/A";
+        var cityDto = _mapper.Map<CityDto>(city);
         return cityDto;
     }
 }

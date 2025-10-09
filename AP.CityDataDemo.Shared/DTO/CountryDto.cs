@@ -1,4 +1,4 @@
-namespace AP.CityDataDemo.Application.DTOs;
+namespace AP.CityDataDemo.Shared.DTO;
 
 public class CountryDto
 {

@@ -21,21 +21,39 @@ namespace AP.CityDataDemo.Application.CQRS.Commands.Cities
     public class DeleteCommandHandler : IRequestHandler<DeleteCommand, bool>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IEmailService _emailService;
 
-        public DeleteCommandHandler(IUnitOfWork uow)
+        public DeleteCommandHandler(IUnitOfWork uow, IEmailService emailService)
         {
             _unitOfWork = uow;
+            _emailService = emailService;
         }
 
         public async Task<bool> Handle(DeleteCommand request, CancellationToken cancellationToken)
         {
-            var deleted = await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id, cancellationToken);
-            if (!deleted)
-            {
-                // either return false and let controller translate, or:
-                throw new NotFoundException($"City {request.Id} not found");
-            }
+            await _unitOfWork.CitiesRepository.DeleteByIdAsync(request.Id, cancellationToken);
             await _unitOfWork.Commit(cancellationToken);
+
+            var city = await _unitOfWork.CitiesRepository.GetByIdAsync(request.Id, null, cancellationToken);
+            if (city != null)
+            {
+                throw new TransactionFailedException($"City with id {request.Id} could not be deleted.");
+            }
+
+            try
+            {
+                await _emailService.SendEmailAsync(
+                    "koenvanaken1999@gmail.com",
+                    "City Deleted",
+                    $"City with id {request.Id} was deleted."
+                    );
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the email sending failure as needed
+                Console.WriteLine($"Failed to send email: {ex.Message}");
+            }
+
             return true;
         }
     }

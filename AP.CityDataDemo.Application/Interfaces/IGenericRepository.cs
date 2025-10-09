@@ -4,8 +4,9 @@ namespace AP.CityDataDemo.Application.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {
-    Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default);
-    Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+    Task<IEnumerable<T>> GetAllAsync<TKey>(int pageNr, int pageSz, Expression<Func<T, TKey>> orderBy,
+            bool ascending = true, string[]? includeProperties = null, CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(int id, string[]? includeProperties = null, CancellationToken cancellationToken = default);
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default);
     Task AddAsync(T entity, CancellationToken cancellationToken = default);
     Task AddRangeAsync(IEnumerable<T> entities, CancellationToken cancellationToken = default);

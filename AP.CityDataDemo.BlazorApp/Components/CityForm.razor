@@ -1,0 +1,186 @@
+@using AP.CityDataDemo.Shared.DTO
+@inject HttpClient Http
+
+<div class="modal show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@(_isEdit ? "Edit City" : "Add City")</h5>
+                <button type="button" class="btn-close" @onclick="OnCancelClicked" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <EditForm EditContext="@editContext" OnValidSubmit="HandleValidSubmit">
+                    <DataAnnotationsValidator />
+
+                    @if (ValidationErrors.Any())
+                    {
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach (var error in ValidationErrors)
+                                {
+                                    <li>@error</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <InputText class="form-control" @bind-Value="model.Name" disabled="@_isEdit" />
+                        <ValidationMessage For="@(() => model.Name)" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Population</label>
+                        <InputNumber class="form-control" @bind-Value="model.Population" />
+                        <ValidationMessage For="@(() => model.Population)" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Country</label>
+                        <InputSelect class="form-select" @bind-Value="model.CountryId">
+                            @if (Countries != null)
+                            {
+                                foreach (var country in Countries)
+                                {
+                                    <option value="@country.Id">@country.Name</option>
+                                }
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => model.CountryId)" />
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" @onclick="OnCancelClicked">Cancel</button>
+                        <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                            @if (isSubmitting)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                <span>@(_isEdit ? "Saving..." : "Adding...")</span>
+                            }
+                            else
+                            {
+                                <span>@(_isEdit ? "Save" : "Add")</span>
+                            }
+                        </button>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public CityDto? Model { get; set; }
+    [Parameter] public IEnumerable<CountryDto>? Countries { get; set; }
+    [Parameter] public EventCallback OnSaved { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private CityDto model = new();
+    private bool _isEdit => Model != null && Model.Id != 0;
+    private EditContext? editContext;
+    private ValidationMessageStore? messageStore;
+    public List<string> ValidationErrors { get; set; } = new();
+    private bool isSubmitting = false;
+
+    protected override void OnParametersSet()
+    {
+        model = Model != null
+            ? new CityDto { Id = Model.Id, Name = Model.Name, Population = Model.Population, CountryId = Model.CountryId, CountryName = Model.CountryName }
+            : new CityDto();
+
+        editContext = new EditContext(model);
+        messageStore = new ValidationMessageStore(editContext);
+        editContext.OnFieldChanged += OnFieldChanged;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        ValidationErrors.Clear();
+        messageStore!.Clear();
+        isSubmitting = true;
+        try
+        {
+            if (_isEdit)
+            {
+                var payload = new { Id = model.Id, Name = model.Name, Population = model.Population, CountryId = model.CountryId };
+                var response = await Http.PutAsJsonAsync($"api/v1/city/{model.Id}", payload);
+                if (await HandleResponse(response)) return;
+            }
+            else
+            {
+                var payload = new { Name = model.Name, Population = model.Population, CountryId = model.CountryId };
+                var response = await Http.PostAsJsonAsync("api/v1/city", payload);
+                if (await HandleResponse(response)) return;
+            }
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private async Task<bool> HandleResponse(HttpResponseMessage response)
+    {
+        if (response.IsSuccessStatusCode)
+        {
+            await OnSaved.InvokeAsync();
+            return true;
+        }
+        if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            TryMapServerValidationErrors(content);
+            editContext!.NotifyValidationStateChanged();
+            return false;
+        }
+        ValidationErrors = new List<string> { "Request failed. Please try again." };
+        return false;
+    }
+
+    private void OnFieldChanged(object? sender, FieldChangedEventArgs e)
+    {
+        messageStore?.Clear(e.FieldIdentifier);
+    }
+
+    private async Task OnCancelClicked()
+    {
+        await OnCancel.InvokeAsync();
+    }
+
+    private void TryMapServerValidationErrors(string content)
+    {
+        try
+        {
+            var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string[]>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            if (dict != null)
+            {
+                foreach (var kv in dict)
+                {
+                    var field = editContext!.Field(kv.Key);
+                    foreach (var msg in kv.Value)
+                    {
+                        messageStore!.Add(field, msg);
+                    }
+                }
+                return;
+            }
+
+            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(content);
+            if (list != null)
+            {
+                foreach (var msg in list)
+                {
+                    messageStore!.Add(editContext!.Field(string.Empty), msg);
+                }
+                return;
+            }
+        }
+        catch
+        {
+            // fall through
+        }
+
+        messageStore!.Add(editContext!.Field(string.Empty), content);
+    }
+}
+
+

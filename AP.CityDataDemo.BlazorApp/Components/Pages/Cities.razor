@@ -1,0 +1,245 @@
+@page "/cities"
+@using AP.CityDataDemo.Shared.DTO
+@using System.Net.Http.Json
+
+@rendermode InteractiveServer
+@inject HttpClient Http
+
+<PageTitle>Cities</PageTitle>
+
+<h1>Cities Overview</h1>
+
+<div class="row mb-4">
+    @* <div class="col-md-6">
+        <div class="mb-3">
+            <button class="btn btn-primary me-2" @onclick="() => SortBy(OrderByPopulation)">
+                Sort by Population (Low → High)
+            </button>
+            <button class="btn btn-primary" @onclick="() => SortBy(OrderByPopulation)">
+                Sort by Population (High → Low)
+            </button>
+        </div>
+    </div> *@
+    <div class="col-md-6">
+        <button class="btn btn-success" @onclick="ToggleAddForm">
+            @if (showAddForm)
+            {
+                <span>➖ Hide Form</span>
+            }
+            else
+            {
+                <span>➕ Add City</span>
+            }
+        </button>
+    </div>
+</div>
+
+@if (showAddForm)
+{
+    <CityForm Countries="CountriesList" OnSaved="OnCityAdded" OnCancel="ToggleAddForm" />
+}
+
+@if (errorMessage != null)
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (cities == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByName)">City @SortIndicator(OrderByName)</th>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByCountry)">Country @SortIndicator(OrderByCountry)</th>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByPopulation)">Population @SortIndicator(OrderByPopulation)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var city in cities)
+            {
+                <tr>
+                    <td>@city.Name</td>
+                    <td>@city.CountryName</td>
+                    <td>@city.Population.ToString("N0")</td>
+                    <td>
+                        <button class="btn btn-sm btn-warning me-2" @onclick="() => ShowEditPopup(city)">
+                            Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger" @onclick="() => DeleteCity(city.Id)">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@* Modal for editing city *@
+@if (IsEditPopupVisible && SelectedCity != null)
+{
+    <CityForm Model="SelectedCity" Countries="CountriesList" OnSaved="OnEditSaved" OnCancel="CloseEditPopup" />
+}
+
+@code {
+    public IEnumerable<CountryDto> CountriesList { get; set; } = new List<CountryDto>();
+    public List<string> ValidationErrors { get; set; } = new();
+    private IEnumerable<CityDto>? cities;
+    private string? errorMessage;
+    private bool showAddForm = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            currentOrderBy = OrderByName;
+            sortAscending = true;
+            await LoadCities();
+            CountriesList = await Http.GetFromJsonAsync<List<CountryDto>>("api/v1/country") ?? new List<CountryDto>();
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
+        }
+    }
+
+    private async Task SortBy(string column)
+    {
+        try
+        {
+            if (string.Equals(currentOrderBy, column, StringComparison.OrdinalIgnoreCase))
+            {
+                sortAscending = !sortAscending;
+            }
+            else
+            {
+                currentOrderBy = column.ToLowerInvariant();
+                sortAscending = true;
+            }
+            await LoadCities();
+            errorMessage = null;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not sort the city data at this time.";
+        }
+    }
+
+    private void ToggleAddForm()
+    {
+        showAddForm = !showAddForm;
+    }
+
+    private async Task OnCityAdded()
+    {
+        showAddForm = false;
+        await LoadCities();
+    }
+
+    private async Task LoadCities()
+    {
+        try
+        {
+            var uri = $"api/v1/city?orderBy={currentOrderBy}&asc={sortAscending}";
+            cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
+            errorMessage = null;
+        }
+        catch (Exception)
+        {
+            errorMessage = "Sorry, we could not load the city data at this time.";
+        }
+    }
+
+    public bool IsEditPopupVisible { get; set; } = false;
+
+    public CityDto? SelectedCity { get; set; }
+    public void ShowEditPopup(CityDto city)
+    {
+        SelectedCity = new CityDto
+        {
+            Id = city.Id,
+            Name = city.Name,
+            Population = city.Population,
+            CountryId = city.CountryId != 0 ? city.CountryId : (CountriesList.FirstOrDefault()?.Id ?? 0),
+            CountryName = city.CountryName
+        };
+        IsEditPopupVisible = true;
+    }
+
+    public void CloseEditPopup()
+    {
+        IsEditPopupVisible = false;
+        SelectedCity = null;
+    }
+
+    private async Task OnEditSaved()
+    {
+        IsEditPopupVisible = false;
+        SelectedCity = null;
+        await LoadCities();
+    }
+
+    public async Task DeleteCity(int cityId)
+    {
+        if (cityId != 0)
+        {
+            var city = cities?.FirstOrDefault(c => c.Id == cityId);
+            try
+            {
+                var response = await Http.DeleteAsync($"api/v1/city/{cityId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    await LoadCities();
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string[]>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        if (dict != null)
+                        {
+                            errorMessage = string.Join("; ", dict.SelectMany(kv => kv.Value));
+                        }
+                        else
+                        {
+                            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(content);
+                            errorMessage = list != null ? string.Join("; ", list) : content;
+                        }
+                    }
+                    catch
+                    {
+                        errorMessage = content;
+                    }
+                }
+                else
+                {
+                    errorMessage = "Sorry, we could not delete the city at this time.";
+                }
+            }
+            catch (Exception)
+            {
+                errorMessage = "Sorry, we could not delete the city at this time.";
+            }
+        }
+    }
+
+    private const string OrderByName = "name";
+    private const string OrderByCountry = "country";
+    private const string OrderByPopulation = "population";
+    private string currentOrderBy = OrderByName;
+    private bool sortAscending = true;
+
+    private MarkupString SortIndicator(string column)
+    {
+        if (string.Equals(currentOrderBy, column, StringComparison.OrdinalIgnoreCase))
+        {
+            return new MarkupString(sortAscending ? " ▲" : " ▼");
+        }
+        return new MarkupString(string.Empty);
+    }
+}
