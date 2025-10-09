@@ -1,0 +1,48 @@
+# Ignore build outputs and user files
+**/bin/
+**/obj/
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Git and other VCS
+.git
+.gitignore
+
+# NuGet packages
+**/packages/
+*.nupkg
+
+# Dockerfiles and compose overrides (optional)
+# Leave Dockerfiles that are used as build contexts if you need them.
+docker-compose*.yml
+
+# Logs and temp
+*.log
+tmp/
+temp/
+Debug/
+Release/
+
+# Node / frontend
+node_modules/
+dist/
+
+# macOS
+.DS_Store
+
+# Publish artifacts
+**/publish/
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+.nuget/packages/
+C:\Program Files (x86)\Microsoft Visual Studio\Shared\NuGetPackages
