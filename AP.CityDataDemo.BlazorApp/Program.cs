@@ -1,11 +1,16 @@
 using AP.CityDataDemo.BlazorApp.Components;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddHttpClient();
+var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5265/";
+builder.Services.AddHttpClient(string.Empty, client =>
+{
+    client.BaseAddress = new Uri(apiBaseUrl);
+});
 
 var app = builder.Build();
 

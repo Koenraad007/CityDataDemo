@@ -148,8 +148,8 @@ else
         try
         {
             // Load cities and countries from API
-            cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/city");
-            CountriesList = await Http.GetFromJsonAsync<List<CountryDto>>("http://localhost:5265/api/v1/country") ?? new List<CountryDto>();
+            cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
+            CountriesList = await Http.GetFromJsonAsync<List<CountryDto>>("api/v1/country") ?? new List<CountryDto>();
         }
         catch (Exception)
         {
@@ -162,7 +162,7 @@ else
         try
         {
             // Call API with query parameters to request sorted data
-            var uri = $"http://localhost:5265/api/v1/city?orderBy=population&asc={!descending}";
+            var uri = $"api/v1/city?orderBy=population&asc={!descending}";
             cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
             errorMessage = null;
         }
@@ -187,7 +187,7 @@ else
     {
         try
         {
-            cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/city");
+            cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
             errorMessage = null;
         }
         catch (Exception)
@@ -233,12 +233,12 @@ else
 
             try
             {
-                var response = await Http.PutAsJsonAsync($"http://localhost:5265/api/v1/city/{SelectedCity.Id}", payload);
+                var response = await Http.PutAsJsonAsync($"api/v1/city/{SelectedCity.Id}", payload);
                 if (response.IsSuccessStatusCode)
                 {
                     IsEditPopupVisible = false;
                     SelectedCity = null;
-                    cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/city");
+                    cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
@@ -281,10 +281,10 @@ else
             var city = cities?.FirstOrDefault(c => c.Id == cityId);
             try
             {
-                var response = await Http.DeleteAsync($"http://localhost:5265/api/v1/city/{cityId}");
+                var response = await Http.DeleteAsync($"api/v1/city/{cityId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    cities = await Http.GetFromJsonAsync<List<CityDto>>("http://localhost:5265/api/v1/city");
+                    cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
