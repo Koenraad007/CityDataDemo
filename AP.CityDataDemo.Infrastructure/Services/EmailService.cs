@@ -1,6 +1,7 @@
 using System.Net.Mail;
+using AP.CityDataDemo.Application.Interfaces;
 
-namespace AP.CityDataDemo.Application.Interfaces
+namespace AP.CityDataDemo.Infrastructure.Services
 {
     public class EmailService : IEmailService
     {
@@ -21,3 +22,5 @@ namespace AP.CityDataDemo.Application.Interfaces
         }
     }
 }
+
+

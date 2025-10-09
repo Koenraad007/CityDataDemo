@@ -4,6 +4,8 @@ using AP.CityDataDemo.Infrastructure.Repositories;
 using AP.CityDataDemo.Infrastructure.UOW;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using AP.CityDataDemo.Application.Interfaces;
+using AP.CityDataDemo.Infrastructure.Services;
 
 namespace AP.CityDataDemo.Infrastructure.Extensions
 {
@@ -13,6 +15,7 @@ namespace AP.CityDataDemo.Infrastructure.Extensions
         {
             services.RegisterDbContext();
             services.RegisterRepositories();
+            services.RegisterServices();
             return services;
         }
 
@@ -30,6 +33,12 @@ namespace AP.CityDataDemo.Infrastructure.Extensions
             services.AddScoped<ICityRepository, CityRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            return services;
+        }
+
+        private static IServiceCollection RegisterServices(this IServiceCollection services)
+        {
+            services.AddScoped<IEmailService, EmailService>();
             return services;
         }
     }

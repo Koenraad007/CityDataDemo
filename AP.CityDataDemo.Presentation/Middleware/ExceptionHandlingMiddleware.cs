@@ -1,10 +1,6 @@
-using System.Net;
 using System.Text.Json;
 using AP.CityDataDemo.Application.Exceptions;
 using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace AP.CityDataDemo.Presentation.Middleware;
 
@@ -60,7 +56,7 @@ public class ExceptionHandlingMiddleware
 }
 
 public class ErrorResponseInfo
-    {
-        public int StatusCode { get; set; }
-        public string Message { get; set; } = string.Empty;
-    }
+{
+    public int StatusCode { get; set; }
+    public string Message { get; set; } = string.Empty;
+}

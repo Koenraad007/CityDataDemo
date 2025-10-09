@@ -13,7 +13,7 @@ namespace AP.CityDataDemo.Application.Extensions
         {
             // services.AddScoped<ICityService, CityService>();
             // services.AddScoped<ICountryService, CountryService>();
-            services.AddScoped<IEmailService, EmailService>();
+            // Email service is registered in Infrastructure
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
