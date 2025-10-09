@@ -36,11 +36,7 @@
 
 @if (showAddForm)
 {
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <AddCityForm OnCityAdded="OnCityAdded" />
-        </div>
-    </div>
+    <CityForm Countries="CountriesList" OnSaved="OnCityAdded" OnCancel="ToggleAddForm" />
 }
 
 @if (errorMessage != null)
@@ -86,7 +82,7 @@ else
 @* Modal for editing city *@
 @if (IsEditPopupVisible && SelectedCity != null)
 {
-    <EditCityForm Model="SelectedCity" Countries="CountriesList" OnSaved="OnEditSaved" OnCancel="CloseEditPopup" />
+    <CityForm Model="SelectedCity" Countries="CountriesList" OnSaved="OnEditSaved" OnCancel="CloseEditPopup" />
 }
 
 @code {

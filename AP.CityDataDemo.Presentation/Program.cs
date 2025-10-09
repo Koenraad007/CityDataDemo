@@ -1,5 +1,6 @@
 using AP.CityDataDemo.Application.Extensions;
 using AP.CityDataDemo.Infrastructure.Extensions;
+using AP.CityDataDemo.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseErrorHandlingMiddleware();
 
 app.MapControllers();
 
