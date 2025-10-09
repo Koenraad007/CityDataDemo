@@ -10,16 +10,16 @@
 <h1>Cities Overview</h1>
 
 <div class="row mb-4">
-    <div class="col-md-6">
+    @* <div class="col-md-6">
         <div class="mb-3">
-            <button class="btn btn-primary me-2" @onclick="() => SortByPopulation(false)">
+            <button class="btn btn-primary me-2" @onclick="() => SortBy(OrderByPopulation)">
                 Sort by Population (Low → High)
             </button>
-            <button class="btn btn-primary" @onclick="() => SortByPopulation(true)">
+            <button class="btn btn-primary" @onclick="() => SortBy(OrderByPopulation)">
                 Sort by Population (High → Low)
             </button>
         </div>
-    </div>
+    </div> *@
     <div class="col-md-6">
         <button class="btn btn-success" @onclick="ToggleAddForm">
             @if (showAddForm)
@@ -52,9 +52,9 @@ else
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>City</th>
-                <th>Country</th>
-                <th>Population</th>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByName)">City @SortIndicator(OrderByName)</th>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByCountry)">Country @SortIndicator(OrderByCountry)</th>
+                <th role="button" style="cursor:pointer" @onclick="() => SortBy(OrderByPopulation)">Population @SortIndicator(OrderByPopulation)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -96,8 +96,9 @@ else
     {
         try
         {
-            // Load cities and countries from API
-            cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
+            currentOrderBy = OrderByName;
+            sortAscending = true;
+            await LoadCities();
             CountriesList = await Http.GetFromJsonAsync<List<CountryDto>>("api/v1/country") ?? new List<CountryDto>();
         }
         catch (Exception)
@@ -106,13 +107,20 @@ else
         }
     }
 
-    private async Task SortByPopulation(bool descending)
+    private async Task SortBy(string column)
     {
         try
         {
-            // Call API with query parameters to request sorted data
-            var uri = $"api/v1/city?orderBy=population&asc={!descending}";
-            cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
+            if (string.Equals(currentOrderBy, column, StringComparison.OrdinalIgnoreCase))
+            {
+                sortAscending = !sortAscending;
+            }
+            else
+            {
+                currentOrderBy = column.ToLowerInvariant();
+                sortAscending = true;
+            }
+            await LoadCities();
             errorMessage = null;
         }
         catch (Exception)
@@ -136,7 +144,8 @@ else
     {
         try
         {
-            cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
+            var uri = $"api/v1/city?orderBy={currentOrderBy}&asc={sortAscending}";
+            cities = await Http.GetFromJsonAsync<List<CityDto>>(uri);
             errorMessage = null;
         }
         catch (Exception)
@@ -184,7 +193,7 @@ else
                 var response = await Http.DeleteAsync($"api/v1/city/{cityId}");
                 if (response.IsSuccessStatusCode)
                 {
-                    cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
+                    await LoadCities();
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
                 {
@@ -217,5 +226,20 @@ else
                 errorMessage = "Sorry, we could not delete the city at this time.";
             }
         }
+    }
+
+    private const string OrderByName = "name";
+    private const string OrderByCountry = "country";
+    private const string OrderByPopulation = "population";
+    private string currentOrderBy = OrderByName;
+    private bool sortAscending = true;
+
+    private MarkupString SortIndicator(string column)
+    {
+        if (string.Equals(currentOrderBy, column, StringComparison.OrdinalIgnoreCase))
+        {
+            return new MarkupString(sortAscending ? " ▲" : " ▼");
+        }
+        return new MarkupString(string.Empty);
     }
 }
