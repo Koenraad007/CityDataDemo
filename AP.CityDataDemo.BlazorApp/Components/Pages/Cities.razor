@@ -86,54 +86,7 @@ else
 @* Modal for editing city *@
 @if (IsEditPopupVisible && SelectedCity != null)
 {
-    <div class="modal show d-block" tabindex="-1" style="background:rgba(0,0,0,0.5);">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit City</h5>
-                    <button type="button" class="btn-close" @onclick="CloseEditPopup" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    @* Show errors here *@
-                    @if (ValidationErrors.Any())
-                    {
-                        <div class="alert alert-danger">
-                            <ul class="mb-0">
-                                @foreach (var error in ValidationErrors)
-                                {
-                                    <li>@error</li>
-                                }
-                            </ul>
-                        </div>
-                    }
-                    <div class="mb-3">
-                        <label class="form-label">Name</label>
-                        <input class="form-control" @bind="SelectedCity.Name" disabled />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Population</label>
-                        <input type="number" class="form-control" @bind="SelectedCity.Population" />
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Country</label>
-                        <select class="form-select" @bind="SelectedCity.CountryId" required>
-                            @if (CountriesList != null)
-                            {
-                                foreach (var country in CountriesList)
-                                {
-                                    <option value="@country.Id">@country.Name</option>
-                                }
-                            }
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" @onclick="CloseEditPopup">Cancel</button>
-                    <button class="btn btn-primary" @onclick="SaveEdit">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <EditCityForm Model="SelectedCity" Countries="CountriesList" OnSaved="OnEditSaved" OnCancel="CloseEditPopup" />
 }
 
 @code {
@@ -218,60 +171,11 @@ else
         SelectedCity = null;
     }
 
-    public async Task SaveEdit()
+    private async Task OnEditSaved()
     {
-        ValidationErrors.Clear();
-        if (SelectedCity != null && SelectedCity.CountryId != 0)
-        {
-            var payload = new
-            {
-                Id = SelectedCity.Id,
-                Name = SelectedCity.Name,
-                Population = SelectedCity.Population,
-                CountryId = SelectedCity.CountryId
-            };
-
-            try
-            {
-                var response = await Http.PutAsJsonAsync($"api/v1/city/{SelectedCity.Id}", payload);
-                if (response.IsSuccessStatusCode)
-                {
-                    IsEditPopupVisible = false;
-                    SelectedCity = null;
-                    cities = await Http.GetFromJsonAsync<List<CityDto>>("api/v1/city");
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-                {
-                    // Try to parse validation errors returned by the API
-                    var content = await response.Content.ReadAsStringAsync();
-                    try
-                    {
-                        var dict = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string[]>>(content, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                        if (dict != null)
-                        {
-                            ValidationErrors = dict.SelectMany(kv => kv.Value).ToList();
-                        }
-                        else
-                        {
-                            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(content);
-                            ValidationErrors = list ?? new List<string> { content };
-                        }
-                    }
-                    catch
-                    {
-                        ValidationErrors = new List<string> { content };
-                    }
-                }
-                else
-                {
-                    errorMessage = "Sorry, we could not update the city at this time.";
-                }
-            }
-            catch (Exception)
-            {
-                errorMessage = "Sorry, we could not update the city at this time.";
-            }
-        }
+        IsEditPopupVisible = false;
+        SelectedCity = null;
+        await LoadCities();
     }
 
     public async Task DeleteCity(int cityId)
