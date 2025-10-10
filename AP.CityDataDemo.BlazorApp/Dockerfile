@@ -2,9 +2,11 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# COPY ["AP.CityDataDemo.BlazorApp/AP.CityDataDemo.BlazorApp.csproj", "AP.CityDataDemo.BlazorApp/"]
-# COPY ["AP.CityDataDemo.Shared/AP.CityDataDemo.Shared.csproj", "AP.CityDataDemo.Shared/"]
-COPY . .
+# Copy only the Blazor project and shared project for restore
+COPY ["AP.CityDataDemo.BlazorApp/AP.CityDataDemo.BlazorApp.csproj", "AP.CityDataDemo.BlazorApp/"]
+COPY ["AP.CityDataDemo.Shared/AP.CityDataDemo.Shared.csproj", "AP.CityDataDemo.Shared/"]
+COPY ["AP.CityDataDemo.sln", "./"]
+
 RUN dotnet restore "AP.CityDataDemo.BlazorApp/AP.CityDataDemo.BlazorApp.csproj"
 
 COPY . .
