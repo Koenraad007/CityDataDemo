@@ -14,8 +14,13 @@ services:
     build:
       context: .
       dockerfile: AP.CityDataDemo.Presentation/Dockerfile
+    environment:
+      # listen on container port 5265 for HTTP
+      - ASPNETCORE_URLS=http://+:5265
     ports:
-      - "5265:80"
+      # map host port 5265 -> container 5265 so API is reachable from host
+      - "5265:5265"
+    restart: unless-stopped
     # depends_on:
     #   - sqlserver
     # environment:
@@ -25,9 +30,16 @@ services:
     build:
       context: .
       dockerfile: AP.CityDataDemo.BlazorApp/Dockerfile
-    ports:
-      - "5240:80"
     depends_on:
       - api
+    environment:
+      # point the Blazor app to the API container by service name and port
+      - ApiBaseUrl=http://api:5265/
+      # ensure the Blazor app listens on container port 5240
+      - ASPNETCORE_URLS=http://+:5240
+    ports:
+      # map host port 5240 -> container 5240 so web is reachable from host
+      - "5240:5240"
+    restart: unless-stopped
 # volumes:
 #   sql_data:

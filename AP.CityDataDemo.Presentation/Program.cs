@@ -1,6 +1,7 @@
 using AP.CityDataDemo.Application.Extensions;
 using AP.CityDataDemo.Infrastructure.Extensions;
 using AP.CityDataDemo.Presentation.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,10 +34,28 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Allow cross-origin requests from the Blazor web container (and anywhere for development)
+app.UseCors("AllowAll");
+
 app.UseHttpsRedirection();
 
 app.UseErrorHandlingMiddleware();
 
 app.MapControllers();
 
-app.Run();
+// Apply any pending EF Core migrations on startup so the sqlite DB has the required schema.
+try
+{
+    using var scope = app.Services.CreateAsyncScope();
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<AP.CityDataDemo.Infrastructure.Contexts.CityDataDemoContext>();
+    await db.Database.MigrateAsync();
+    Console.WriteLine("Database migrations applied successfully.");
+}
+catch (Exception ex)
+{
+    // If migration fails, we still attempt to run the app but log the error.
+    Console.WriteLine($"An error occurred while migrating the database: {ex}");
+}
+
+await app.RunAsync();
