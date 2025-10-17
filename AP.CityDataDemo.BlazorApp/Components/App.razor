@@ -9,12 +9,22 @@
     <link rel="stylesheet" href="app.css" />
     <link rel="stylesheet" href="AP.CityDataDemo.BlazorApp.styles.css" />
     <link rel="icon" type="image/png" href="favicon.png" />
+    <link href="manifest.json" rel="manifest" />
     <HeadOutlet />
 </head>
 
 <body>
     <Routes />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js').then(function (registration) {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(function (error) {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+    </script>
 </body>
 
 </html>
